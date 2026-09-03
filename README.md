@@ -34,7 +34,7 @@
 
 ## 🛠️ Prerequisites
 
-<!-- TODO: In this section you put what is needed for the program to run.
+<!-- TODO: In this section you put what is needed for the program to run. lets gooo
 For example: OS version, programs, libraries, etc.  
 
 -->
