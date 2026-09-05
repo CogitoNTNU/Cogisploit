@@ -106,6 +106,28 @@ uv run pytest --doctest-modules --cov=src --cov-report=html
 This project would not have been possible without the hard work and dedication of all of the contributors. Thank you for the time and effort you have put into making this project a reality.
 
 <table align="center">
+    <h2>Leaders: </h2>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/Codin-Wizard">
+              <img src="https://github.com/Codin-Wizard.png?size=100" width="100px;" alt="Vittorio"/><br />
+              <sub><b>Vittorio</b></sub>
+            </a>
+        </td>
+        <td align="center">
+            <a href="https://github.com/jensgva">
+              <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
+              <sub><b>Jens</b></sub>
+            </a>
+        </td>
+        <td align="center">
+            <a href="https://github.com/trifleen">
+              <img src="https://github.com/trifleen.png?size=100" width="100px;" alt="Ivan"/><br />
+              <sub><b>Ivan</b></sub>
+            </a>
+        </td>
+    </tr>
+    <h2>Members: </h2>
     <tr>
         <td align="center">
             <a href="https://github.com/Ama25T">
@@ -120,21 +142,9 @@ This project would not have been possible without the hard work and dedication o
             </a>
         </td>
         <td align="center">
-            <a href="https://github.com/Codin-Wizard">
-              <img src="https://github.com/Codin-Wizard.png?size=100" width="100px;" alt="Vittorio"/><br />
-              <sub><b>Vittorio</b></sub>
-            </a>
-        </td>
-        <td align="center">
             <a href="https://github.com/ellekalstad-sudo">
               <img src="https://github.com/ellekalstad-sudo.png?size=100" width="100px;" alt="Elle"/><br />
               <sub><b>Elle</b></sub>
-            </a>
-        </td>
-        <td align="center">
-            <a href="https://github.com/jensgva">
-              <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
-              <sub><b>Jens</b></sub>
             </a>
         </td>
         <td align="center">
@@ -147,12 +157,6 @@ This project would not have been possible without the hard work and dedication o
             <a href="https://github.com/taspinarmervan-ctrl">
               <img src="https://github.com/taspinarmervan-ctrl.png?size=100" width="100px;" alt="Mervan"/><br />
               <sub><b>Mervan</b></sub>
-            </a>
-        </td>
-        <td align="center">
-            <a href="https://github.com/trifleen">
-              <img src="https://github.com/trifleen.png?size=100" width="100px;" alt="Ivan"/><br />
-              <sub><b>Ivan</b></sub>
             </a>
         </td>
     </tr>
