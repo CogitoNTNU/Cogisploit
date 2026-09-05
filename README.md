@@ -76,36 +76,11 @@ For example: OS version, programs, libraries, etc.
 
 To run the project, run the following command from the root directory of the project:
 
-```bash
-
-```
-
-<!-- TODO: Instructions on how to run the project and use its features. -->
-
-### 📖 Generate Documentation Site
-
-To build and preview the documentation site locally:
-
-```bash
-uv run mkdocs build
-uv run mkdocs serve
-```
-
-This will build the documentation and start a local server at [http://127.0.0.1:8000/](http://127.0.0.1:8000/) where you can browse the docs and API reference. Get the documentation according to the lastes commit on main by viewing the `gh-pages` branch on GitHub: [https://cogitontnu.github.io/Cogisploit/](https://cogitontnu.github.io/Cogisploit/).
-
-## Testing
-
-To run the test suite, run the following command from the root directory of the project:
-
-```bash
-uv run pytest --doctest-modules --cov=src --cov-report=html
-```
-
 ## Team
 
 This project would not have been possible without the hard work and dedication of all of the contributors. Thank you for the time and effort you have put into making this project a reality.
 
-<h4 align="center">Leaders: </h2>
+<p align="center">Leaders: </p>
 <table align="center">
     <tr>
         <td align="center">
@@ -128,7 +103,7 @@ This project would not have been possible without the hard work and dedication o
         </td>
     </tr>
 </table>
-<h4 align="center">Members:</h2>
+<p align="center">Members:</p>
 <table align="center">
     <tr>
         <td align="center">
