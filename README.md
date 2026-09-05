@@ -129,12 +129,6 @@ This project would not have been possible without the hard work and dedication o
               <sub><b>Elle Kalstad</b></sub>
             </a>
         </td>
-            <a href="https://github.com/ellekalstad-sudo">
-              <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
-              <sub><b>Jens Valderhaug</b></sub>
-            </a>
-        </td>
-        </td>
             <a href="https://github.com/jensgva">
               <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
               <sub><b>Jens Valderhaug</b></sub>
