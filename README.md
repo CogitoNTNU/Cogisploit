@@ -105,8 +105,8 @@ uv run pytest --doctest-modules --cov=src --cov-report=html
 
 This project would not have been possible without the hard work and dedication of all of the contributors. Thank you for the time and effort you have put into making this project a reality.
 
+<h4>Leaders: </h2>
 <table align="center">
-    <h2>Leaders: </h2>
     <tr>
         <td align="center">
             <a href="https://github.com/Codin-Wizard">
@@ -127,7 +127,9 @@ This project would not have been possible without the hard work and dedication o
             </a>
         </td>
     </tr>
-    <h2>Members: </h2>
+</table>
+<h4>Members: </h2>
+<table align="center">
     <tr>
         <td align="center">
             <a href="https://github.com/Ama25T">
