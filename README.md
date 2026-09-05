@@ -1,12 +1,10 @@
-<!-- TODO: CHANGE ALL INSTANCES OF "PROJECT-TEMPLATE" IN ENTIRE PROJECT TO YOUR PROJECT TITLE-->
-
-# PROJECT-TEMPLATE
+# Cogisploit
 
 <div align="center">
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/CogitoNTNU/PROJECT-TEMPLATE/ci.yml)
-![GitHub top language](https://img.shields.io/github/languages/top/CogitoNTNU/PROJECT-TEMPLATE)
-![GitHub language count](https://img.shields.io/github/languages/count/CogitoNTNU/PROJECT-TEMPLATE)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/CogitoNTNU/Cogisploit/ci.yml)
+![GitHub top language](https://img.shields.io/github/languages/top/CogitoNTNU/Cogisploit)
+![GitHub language count](https://img.shields.io/github/languages/count/CogitoNTNU/Cogisploit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Project Version](https://img.shields.io/badge/version-0.0.1-blue)](https://img.shields.io/badge/version-0.0.1-blue)
 
@@ -16,12 +14,10 @@
 <details> 
 <summary><b>📋 Table of contents </b></summary>
 
-- [PROJECT-TEMPLATE](#PROJECT-TEMPLATE)
+- [Cogisploit](#Cogisploit)
   - [Description](#description)
   - [🛠️ Prerequisites](#%EF%B8%8F-prerequisites)
   - [Getting started](#getting-started)
-  - [Usage](#usage)
-    - [📖 Generate Documentation Site](#-generate-documentation-site)
   - [Testing](#testing)
   - [Team](#team)
     - [License](#license)
@@ -52,8 +48,8 @@ For example: OS version, programs, libraries, etc.
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/CogitoNTNU/PROJECT-TEMPLATE.git
-   cd PROJECT-TEMPLATE
+   git clone https://github.com/CogitoNTNU/Cogisploit.git
+   cd Cogisploit
    ```
 
 1. **Install dependencies**:
@@ -95,7 +91,7 @@ uv run mkdocs build
 uv run mkdocs serve
 ```
 
-This will build the documentation and start a local server at [http://127.0.0.1:8000/](http://127.0.0.1:8000/) where you can browse the docs and API reference. Get the documentation according to the lastes commit on main by viewing the `gh-pages` branch on GitHub: [https://cogitontnu.github.io/PROJECT-TEMPLATE/](https://cogitontnu.github.io/PROJECT-TEMPLATE/).
+This will build the documentation and start a local server at [http://127.0.0.1:8000/](http://127.0.0.1:8000/) where you can browse the docs and API reference. Get the documentation according to the lastes commit on main by viewing the `gh-pages` branch on GitHub: [https://cogitontnu.github.io/Cogisploit/](https://cogitontnu.github.io/Cogisploit/).
 
 ## Testing
 
@@ -111,14 +107,55 @@ This project would not have been possible without the hard work and dedication o
 
 <table align="center">
     <tr>
-        <!--
         <td align="center">
-            <a href="https://github.com/NAME_OF_MEMBER">
-              <img src="https://github.com/NAME_OF_MEMBER.png?size=100" width="100px;" alt="NAME OF MEMBER"/><br />
-              <sub><b>NAME OF MEMBER</b></sub>
+            <a href="https://github.com/Ama25T">
+              <img src="https://github.com/Ama25T.png?size=100" width="100px;" alt="Amalie"/><br />
+              <sub><b>Amalie Tjørholm</b></sub>
             </a>
         </td>
-        -->
+        <td align="center">
+            <a href="https://github.com/andborru">
+              <img src="https://github.com/andborru.png?size=100" width="100px;" alt="Andreas"/><br />
+              <sub><b>Andreas Børrud</b></sub>
+            </a>
+        </td>
+            <a href="https://github.com/Codin-Wizard">
+              <img src="https://github.com/Codin-Wizard.png?size=100" width="100px;" alt="Vittorio"/><br />
+              <sub><b>Vittorio Avvelone</b></sub>
+            </a>
+        </td>
+            <a href="https://github.com/ellekalstad-sudo">
+              <img src="https://github.com/ellekalstad-sudo.png?size=100" width="100px;" alt="Elle"/><br />
+              <sub><b>Elle Kalstad</b></sub>
+            </a>
+        </td>
+            <a href="https://github.com/ellekalstad-sudo">
+              <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
+              <sub><b>Jens Valderhaug</b></sub>
+            </a>
+        </td>
+        </td>
+            <a href="https://github.com/jensgva">
+              <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
+              <sub><b>Jens Valderhaug</b></sub>
+            </a>
+        </td>
+        </td>
+            <a href="https://github.com/kodekongen04">
+              <img src="https://github.com/kodekongen04.png?size=100" width="100px;" alt="Sondre"/><br />
+              <sub><b>Sondre Solli</b></sub>
+            </a>
+        </td>
+            <a href="https://github.com/taspinarmervan-ctrl">
+              <img src="https://github.com/taspinarmervan-ctrl.png?size=100" width="100px;" alt="Mervan"/><br />
+              <sub><b>Mervan Taspinar</b></sub>
+            </a>
+        </td>
+            <a href="https://github.com/trifleen">
+              <img src="https://github.com/trifleen.png?size=100" width="100px;" alt="Ivan"/><br />
+              <sub><b>Ivan Kochura</b></sub>
+            </a>
+        </td>
     </tr>
 </table>
 
