@@ -110,49 +110,49 @@ This project would not have been possible without the hard work and dedication o
         <td align="center">
             <a href="https://github.com/Ama25T">
               <img src="https://github.com/Ama25T.png?size=100" width="100px;" alt="Amalie"/><br />
-              <sub><b>Amalie Tjørholm</b></sub>
+              <sub><b>Amalie</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/andborru">
               <img src="https://github.com/andborru.png?size=100" width="100px;" alt="Andreas"/><br />
-              <sub><b>Andreas Børrud</b></sub>
+              <sub><b>Andreas</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/Codin-Wizard">
               <img src="https://github.com/Codin-Wizard.png?size=100" width="100px;" alt="Vittorio"/><br />
-              <sub><b>Vittorio Avvelone</b></sub>
+              <sub><b>Vittorio</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/ellekalstad-sudo">
               <img src="https://github.com/ellekalstad-sudo.png?size=100" width="100px;" alt="Elle"/><br />
-              <sub><b>Elle Kalstad</b></sub>
+              <sub><b>Elle</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/jensgva">
               <img src="https://github.com/jensgva.png?size=100" width="100px;" alt="Jens"/><br />
-              <sub><b>Jens Valderhaug</b></sub>
+              <sub><b>Jens</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/kodekongen04">
               <img src="https://github.com/kodekongen04.png?size=100" width="100px;" alt="Sondre"/><br />
-              <sub><b>Sondre Solli</b></sub>
+              <sub><b>Sondre</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/taspinarmervan-ctrl">
               <img src="https://github.com/taspinarmervan-ctrl.png?size=100" width="100px;" alt="Mervan"/><br />
-              <sub><b>Mervan Taspinar</b></sub>
+              <sub><b>Mervan</b></sub>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/trifleen">
               <img src="https://github.com/trifleen.png?size=100" width="100px;" alt="Ivan"/><br />
-              <sub><b>Ivan Kochura</b></sub>
+              <sub><b>Ivan</b></sub>
             </a>
         </td>
     </tr>
