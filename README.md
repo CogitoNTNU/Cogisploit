@@ -120,6 +120,9 @@ This project would not have been possible without the hard work and dedication o
               <img src="https://github.com/Codin-Wizard.png?size=100" width="100px;" alt="Vittorio"/><br />
               <sub><b>Vittorio Avvelone</b></sub>
             </a>
+          </td>
+    </tr>
+        <td align="center">
             <a href="https://github.com/ellekalstad-sudo">
               <img src="https://github.com/ellekalstad-sudo.png?size=100" width="100px;" alt="Elle"/><br />
               <sub><b>Elle Kalstad</b></sub>
@@ -132,6 +135,9 @@ This project would not have been possible without the hard work and dedication o
               <img src="https://github.com/kodekongen04.png?size=100" width="100px;" alt="Sondre"/><br />
               <sub><b>Sondre Solli</b></sub>
             </a>
+          </td>
+    </tr>
+        <td align="center">
             <a href="https://github.com/taspinarmervan-ctrl">
               <img src="https://github.com/taspinarmervan-ctrl.png?size=100" width="100px;" alt="Mervan"/><br />
               <sub><b>Mervan Taspinar</b></sub>
