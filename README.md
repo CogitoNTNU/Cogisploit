@@ -80,8 +80,8 @@ To run the project, run the following command from the root directory of the pro
 
 This project would not have been possible without the hard work and dedication of all of the contributors. Thank you for the time and effort you have put into making this project a reality.
 
-<p align="center">Leaders: </p>
-<table align="center">
+<p align="left">Leaders: </p>
+<table align="left">
     <tr>
         <td align="center">
             <a href="https://github.com/Codin-Wizard">
@@ -103,8 +103,8 @@ This project would not have been possible without the hard work and dedication o
         </td>
     </tr>
 </table>
-<p align="center">Members:</p>
-<table align="center">
+<p align="left">Members:</p>
+<table align="left">
     <tr>
         <td align="center">
             <a href="https://github.com/Ama25T">
