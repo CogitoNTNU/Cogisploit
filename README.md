@@ -24,7 +24,6 @@
 - [📚 Phase 1 — TryHackMe AI Security Learning Path](#-phase-1--tryhackme-ai-security-learning-path)
 - [🚩 Phase 2 — Machine Learning CTF Challenges](#-phase-2--machine-learning-ctf-challenges)
 - [🔨 Phase 3 — Building Our Own AI CTF Challenges](#-phase-3--building-our-own-ai-ctf-challenges)
-- [🧰 Toolbox](#-toolbox)
 - [🛠️ Getting Started](#%EF%B8%8F-getting-started)
 - [Team](#team)
 - [License](#license)
@@ -45,11 +44,11 @@ Chatbots, RAG pipelines, autonomous agents and protocols like **A2A** open an at
 
 ## 🧭 The Journey
 
-| Phase | What | Status |
+| Phase | <img src="docs/images/spacer.png" align="left" width="100%" height="1" alt="">What | Status |
 | :---: | ---- | ------ |
-| 1 | [TryHackMe AI Security Path](#-phase-1--tryhackme-ai-security-learning-path) — guided fundamentals | ✅ Completed |
-| 2 | [ML CTF Challenges](#-phase-2--machine-learning-ctf-challenges) — agentic focus | 🔄 In progress |
-| 3 | [Our own AI CTF challenges](#-phase-3--building-our-own-ai-ctf-challenges) — from solver to builder | 🔜 Not started |
+| 1 | [TryHackMe AI Security Path](#-phase-1--tryhackme-ai-security-learning-path) — guided fundamentals | ✅&nbsp;Completed |
+| 2 | [ML CTF Challenges](#-phase-2--machine-learning-ctf-challenges) — agentic focus | 🔄&nbsp;In&nbsp;progress |
+| 3 | [Our own AI CTF challenges](#-phase-3--building-our-own-ai-ctf-challenges) — from solver to builder | 🔜&nbsp;Not&nbsp;started |
 
 <br>
 
@@ -86,7 +85,7 @@ The remaining modules — AI Supply Chain Security, Data Poisoning — didn't fi
 
 Then the hands-on part: [alexdevassy's Machine Learning CTF Challenges](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges) — nine Dockerized targets spanning LLM backends, autonomous agents and ML models. We mainly worked the three **agentic** ones, with **Burp Suite**, custom scripts and manual analysis — digging into the **A2A protocol** and how trust between agents can be abused.
 
-| Challenge | Attack vector | Difficulty |
+| Challenge | <img src="docs/images/spacer.png" align="left" width="100%" height="1" alt="">Attack vector | Difficulty |
 | --------- | ------------- | :--------: |
 | [Matrix](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges/tree/master/Matrix_AI_Agent_CTF_Challenge) | Insecure A2A agent capabilities — multi-agent system | Medium |
 | [Mirage](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges/tree/master/Mirage_CTF_Challenge) | MCP signature cloaking → data exfiltration — SecureCode IDE + remote MCP server | Medium |
@@ -129,17 +128,6 @@ Next we turn the tables: instead of solving challenges, we build our own AI CTFs
 
 <br>
 
-## 🧰 Toolbox
-
-| Tool | Used for |
-| ---- | -------- |
-| [Burp Suite](https://portswigger.net/burp) | Intercepting and manipulating LLM/agent traffic |
-| [Docker](https://www.docker.com/) | Running CTF targets locally |
-| [A2A](https://a2a-protocol.org) | Agent-to-agent protocol — and its attack surface |
-| [MCP](https://modelcontextprotocol.io) | Tool and context integration for LLMs |
-| [OWASP LLM Top 10](https://llmtop10.com/) | Classifying what we find |
-
-<br>
 
 ## 🛠️ Getting Started
 
