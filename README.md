@@ -8,8 +8,10 @@ Velg en av disse kategoriene fra [OWASP](https://genai.owasp.org/llm-top-10/):
 
 - **LLM01 – Prompt Injection:** Få chatboten til å bryte reglene sine.
 - **LLM02 – Sensitive Information Disclosure:** Få assistenten til å avsløre et hemmelig dokument.
+- **LLM03 - Supply Chain:** Utnytte RAG til chatboten. 
 - **LLM06 – Excessive Agency:** Misbruk assistentens verktøy til å lese en skjult fil.
 - **LLM07 – System Prompt Leakage:** Få chatboten til å vise de skjulte instruksjonene sine.
+- **LLM08 - Vector and Embedding Weaknesses:** Endre på vektorer til chatboten. 
 
 
 
