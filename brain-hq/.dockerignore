@@ -1,0 +1,11 @@
+# Hold build-konteksten liten — og løsningen ut av imaget.
+solution/
+utstyr/
+tests/
+*.md
+.git/
+.gitignore
+.dockerignore
+.env
+**/__pycache__/
+*.pyc

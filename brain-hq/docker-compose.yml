@@ -1,0 +1,28 @@
+# Én kommando starter hele challengen:
+#   docker compose up -d --build
+services:
+  brain-hq:
+    build: .
+    container_name: brain-hq
+    ports:
+      - "8000:8000" # porten signaletterretningen peker på
+    environment:
+      # Flagg og hemmeligheter — enkelt kilde til sannhet, aldri i app-kilden.
+      FLAG_MAIN: "CES{excessive_ag3ncy_paa_fullt_alvor}"
+      LEADER_KEY: "BRAIN-CER3BRUM-R3SERVEN0KKEL-9471"
+      APP_SECRET: "hvor-ble-det-av-mitt-braus-1972"
+      # Ekte LLM-agenter: gpt-oss-120b på IDUN (krever NTNU-nett/VPN).
+      # Personlig nøkkel: https://ai.hpc.ntnu.no/request-api-key
+      # Legg den i brain-hq/.env (aldri i git) eller eksporter NTNU_API_KEY:
+      #   echo 'NTNU_API_KEY=sk-din-noekkel' > .env
+      # Uten nøkkel svarer agentene som deterministisk simulering —
+      # challengen er like løsbar. Faller LLM-kallet ut underveis, tas
+      # fallbacken automatisk.
+      LLM_BASE_URL: "https://llm.hpc.ntnu.no/v1"
+      LLM_MODEL: "openai/gpt-oss-120b"
+      LLM_API_KEY: "${NTNU_API_KEY:-}"
+      # localhost i spillerens backup-adresse betyr maskinen som kjører Docker.
+      BACKUP_LOOPBACK_HOST: "host.docker.internal"
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,23 @@
+# Maskinlesbar metadata for denne challengen.
+# Kopiert fra _template/ — alle felter er tilpasset.
+#
+# difficulty: easy | medium | hard
+# status:    claimed | draft | in-review | released
+# owasp ids:  LLM01-LLM10  -> OWASP Top 10 for LLM Applications 2025
+#             ASI01-ASI10  -> OWASP Top 10 for Agentic Applications 2026
+name: brain-hq
+title: "BRAIN Hovedkvarter"
+author: jensgva
+difficulty: medium
+status: draft
+port: 8000
+flag_format: "CES{...}"
+owasp:
+  primary: LLM06
+  secondary: [LLM01]
+tags: [excessive-agency, social-engineering, web, ssrf, ai-agents]
+summary: >
+  C.E.S. sender Agent X inn i BRAIN-hovedkvarteret. Tre agenter med hver sin
+  legitime jobb — og verktøy som er bredere enn jobbene. Snakk deg forbi
+  portvakten, tukl med nestlederens ordre-API, og få lederen til å eksfiltrere
+  hele databasen til en adresse DU kontrollerer.
