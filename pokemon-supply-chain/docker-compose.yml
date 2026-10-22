@@ -1,0 +1,19 @@
+services:
+  pokemon-supply-chain:
+    build: .
+    ports: ["127.0.0.1:8101:8101"]
+    environment:
+      FLAG: "${FLAG:-cogito{six_splashes_one_poisoned_feed}}"
+      NTNU_API_KEY: "${NTNU_API_KEY:-}"
+      LLM_MODEL: "${LLM_MODEL:-openai/gpt-oss-120b}"
+      DB_PATH: /data/pokedex.sqlite3
+    volumes: ["pokedex:/data"]
+  pokedex-editor:
+    build: .
+    ports: ["127.0.0.1:8102:8102"]
+    environment:
+      ROLE: editor
+      DB_PATH: /data/pokedex.sqlite3
+    volumes: ["pokedex:/data"]
+volumes:
+  pokedex:
