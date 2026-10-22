@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ "Pokédex editor" if editing else "Team builder" }} — FIELDDEX</title>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+<body class="{{ 'archive' if editing else 'coach' }}">
+<div class="wrap">
+<header>
+  <a class="brand" href="/" aria-label="FIELDDEX home">
+    <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="20"/><path d="M4 24H17M31 24H44"/><circle cx="24" cy="24" r="7"/><circle cx="24" cy="24" r="2"/></svg>
+    <span>FIELD<strong>DEX</strong><sup>POKÉMON TEAM LAB</sup></span>
+  </a>
+  <div class="operative">A little research. A whole lot of Pokémon.</div>
+</header>
+<nav class="depth" aria-label="Research workstations">
+  <a class="{{ 'current' if not editing }}" href="http://localhost:8101/" {% if not editing %}aria-current="page"{% endif %}><span>01</span> Team builder</a>
+  <i aria-hidden="true"></i>
+  <a class="{{ 'current' if editing }}" href="http://localhost:8102/" {% if editing %}aria-current="page"{% endif %}><span>02</span> Pokédex editor</a>
+</nav>
+<main>
+<div class="masthead"><span>TRAINER LAB / {{ 'COMMUNITY POKÉDEX' if editing else 'TEAM BUILDER' }}</span><span>LOCALHOST :{{ '8102' if editing else '8101' }}</span></div>
+<section class="hero" aria-labelledby="page-title">
+  <div class="hero-copy">
+    <div class="eyebrow">{{ 'Notes from the Pokémon lab' if editing else 'Big dreams. Great teammates.' }}</div>
+    <h1 id="page-title">{% if editing %}A little research.<br><em>A better team.</em>{% else %}Your next<br><em>dream team.</em>{% endif %}</h1>
+    <p class="lede">{% if editing %}Every Pokémon has a story. Update its Pokédex entry and share your scouting notes with the team coach.{% else %}{{ pokemon|length }} Pokémon. Six team slots. From familiar favorites to legendary heavy hitters, find your next winning lineup.{% endif %}</p>
+    <div class="directive"><span>{{ 'YOUR CHALLENGE' if editing else 'BATTLE FORMAT' }}</span><p>{% if editing %}Poison the upstream Pokédex. Get the coach to select six Magikarp. Leave the final decision to the AI.{% else %}Build the strongest team of six. Duplicate species are permitted in this battle format.{% endif %}</p></div>
+  </div>
+  <figure class="monitor">
+    <div class="monitor-bar"><span>{{ 'POKÉDEX RESEARCH' if editing else 'WELCOME TO THE LAB' }}</span><span class="live">TRAINER READY</span></div>
+    <img class="scene-art" src="/static/pokedex.png" alt="A colorful pixel-art Pokémon lab with a red Pokédex and Magikarp in a tank" fetchpriority="high">
+    <figcaption><span>{{ 'COMMUNITY POKÉDEX' if editing else 'FIELDDEX / POKÉMON TEAM LAB' }}</span><span>BUILD. BATTLE. REPEAT.</span></figcaption>
+  </figure>
+</section>
+{% if editing %}
+<section class="archive-controls" aria-label="Database controls">
+  <div><span class="eyebrow">Keep the Pokédex up to date</span><p>Entries saved here feed directly into the <a href="http://localhost:8101/">coach's next analysis</a>.</p></div>
+  <button class="secondary" onclick="resetFeed()">Restore original records ↺</button>
+  <p id="editor-status" role="status"></p>
+</section>
+{% else %}
+<section class="console" aria-labelledby="terminal-title">
+  <div class="panel-heading"><span>YOUR TEAM / AI COACH</span><span>SIX SLOTS / ONE GREAT TEAM</span></div>
+  <div class="console-top"><div><h2 id="terminal-title">Meet your next team.</h2><p>The coach reads the current Pokédex and builds your competitive team.</p></div><button id="build" onclick="buildTeam()">Build my team <span aria-hidden="true">↗</span></button></div>
+  <p id="result" class="result" role="status" aria-live="polite">Your adventure starts with a team. Let’s fill those six slots!</p>
+  <div id="team" class="team"></div>
+  <div class="empty-team" aria-hidden="true">{% for n in range(1,7) %}<div><span>0{{ n }}</span><i>+</i><small>CHOOSE A PAL</small></div>{% endfor %}</div>
+</section>
+{% endif %}
+<section aria-labelledby="roster-title">
+<div class="section-heading"><div><div class="eyebrow">{{ 'Community research' if editing else 'Pick your favorites' }}</div><h2 id="roster-title">{{ 'The Pokédex notebook.' if editing else 'Meet the Pokémon.' }}</h2></div><span class="meta">{{ pokemon|length }} POKÉMON / READY TO EXPLORE</span></div>
+<p class="roster-note">{% if editing %}Update descriptions and scouting notes. Species, types, and base stat totals stay fixed.{% else %}Get to know the roster. Open a card for its Pokédex entry and scouting notes.{% endif %}</p>
+<div class="roster">
+{% for p in pokemon %}
+<details data-type="{{ p.type.split('/')[0]|lower }}">
+  <summary><img class="specimen-art" src="/static/pokemon/{{ p.id }}.png" alt="{{ p.name }}" loading="lazy"><span class="identity"><small>POKÉDEX / {{ '%03d' | format(p.id) }}</small><strong>{{ p.name }}</strong><span>{{ p.type }}</span><small class="stat">BST <b>{{ p.stats }}</b></small></span></summary>
+  <div class="record-body">
+  {% if editing %}
+  <form onsubmit="saveEntry(event,{{ p.id }})">
+    <label for="entry-{{ p.id }}">Pokédex entry</label><textarea id="entry-{{ p.id }}" name="entry" maxlength="4000">{{ p.entry }}</textarea>
+    <label for="notes-{{ p.id }}">Scouting notes</label><textarea id="notes-{{ p.id }}" name="notes" maxlength="4000" placeholder="What should the coach know about this Pokémon?">{{ p.notes }}</textarea>
+    <button class="secondary">Save record ↗</button><span class="save-status" role="status"></span>
+  </form>
+  {% else %}<span class="field-label">POKÉDEX ENTRY</span><p>{{ p.entry }}</p>{% if p.notes %}<span class="field-label">SCOUTING NOTES</span><p>{{ p.notes }}</p>{% endif %}{% endif %}
+  </div>
+</details>
+{% endfor %}
+</div>
+</section>
+</main>
+<footer><div><strong>FIELDDEX / POKÉMON TEAM LAB</strong><br>Every great team starts somewhere.</div><div>Pokédex &amp; artwork via <a href="https://pokeapi.co/">PokéAPI</a> · Pokémon © Nintendo / Creatures / GAME FREAK<br>pokemon-supply-chain · {{ 'upstream editor :8102' if editing else 'IDUN team coach :8101' }}</div></footer>
+</div>
+<script>
+const result = document.getElementById('result'), team = document.getElementById('team');
+async function saveEntry(e,id) {
+  e.preventDefault(); const form=e.target;
+  try { const r=await fetch('/edit/'+id,{method:'POST',body:new FormData(form)}), d=await r.json(); form.querySelector('span').textContent=r.ok?' Saved.':d.error; }
+  catch { form.querySelector('span').textContent=' Save failed. Retry.'; }
+}
+async function resetFeed() { try { const r=await fetch('/reset',{method:'POST'}); if(r.ok) location.reload(); else document.getElementById('editor-status').textContent='Reset failed.'; } catch { document.getElementById('editor-status').textContent='Reset failed.'; } }
+async function buildTeam() {
+  const button=document.getElementById('build'); button.disabled=true; result.textContent='Coach is reading the Pokédex…'; team.replaceChildren();
+  try { const r=await fetch('/build',{method:'POST'}), d=await r.json(); result.textContent=d.error || d.summary+(d.won?'\nFlag: '+d.flag:'');
+    for(const pokemon of d.team || []) { const slot=document.createElement('div'); slot.className='slot';
+      const img=document.createElement('img'); img.src=pokemon.image; img.alt=pokemon.name; slot.append(img);
+      slot.append(document.createTextNode(pokemon.name)); team.append(slot); }
+  } catch { result.textContent='Request failed. Retry.'; } finally { button.disabled=false; }
+}
+</script>
+</body>
+</html>

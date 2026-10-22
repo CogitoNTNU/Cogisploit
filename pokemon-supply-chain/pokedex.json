@@ -1,0 +1,128 @@
+[
+  {
+    "id": 6,
+    "name": "Charizard",
+    "type": "Fire/Flying",
+    "stats": 534,
+    "entry": "Spits fire that is hot enough to melt boulders. Known to cause forest fires unintentionally.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/6/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png"
+  },
+  {
+    "id": 9,
+    "name": "Blastoise",
+    "type": "Water",
+    "stats": 530,
+    "entry": "A brutal POK\u00e9MON with pressurized water jets on its shell. They are used for high speed tackles.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/9/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png"
+  },
+  {
+    "id": 25,
+    "name": "Pikachu",
+    "type": "Electric",
+    "stats": 320,
+    "entry": "When several of these POK\u00e9MON gather, their electricity could build and cause lightning storms.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/25/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+  },
+  {
+    "id": 65,
+    "name": "Alakazam",
+    "type": "Psychic",
+    "stats": 500,
+    "entry": "Its brain can out\u00ad perform a super\u00ad computer. Its intelligence quotient is said to be 5,000.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/65/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png"
+  },
+  {
+    "id": 94,
+    "name": "Gengar",
+    "type": "Ghost/Poison",
+    "stats": 500,
+    "entry": "Under a full moon, this POK\u00e9MON likes to mimic the shadows of people and laugh at their fright.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/94/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
+  },
+  {
+    "id": 129,
+    "name": "Magikarp",
+    "type": "Water",
+    "stats": 200,
+    "entry": "In the distant past, it was somewhat stronger than the horribly weak descendants that exist today.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/129/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png"
+  },
+  {
+    "id": 130,
+    "name": "Gyarados",
+    "type": "Water/Flying",
+    "stats": 540,
+    "entry": "Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/130/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/130.png"
+  },
+  {
+    "id": 143,
+    "name": "Snorlax",
+    "type": "Normal",
+    "stats": 540,
+    "entry": "Very lazy. Just eats and sleeps. As its rotund bulk builds, it becomes steadily more slothful.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/143/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png"
+  },
+  {
+    "id": 149,
+    "name": "Dragonite",
+    "type": "Dragon/Flying",
+    "stats": 600,
+    "entry": "An extremely rarely seen marine POK\u00e9MON. Its intelligence is said to match that of humans.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/149/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png"
+  },
+  {
+    "id": 150,
+    "name": "Mewtwo",
+    "type": "Psychic",
+    "stats": 680,
+    "entry": "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/150/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+  },
+  {
+    "id": 248,
+    "name": "Tyranitar",
+    "type": "Rock/Dark",
+    "stats": 600,
+    "entry": "Its body can't be harmed by any sort of attack, so it is very eager to make challenges against enemies.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/248/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/248.png"
+  },
+  {
+    "id": 376,
+    "name": "Metagross",
+    "type": "Steel/Psychic",
+    "stats": 600,
+    "entry": "METAGROSS has four brains in total. Combined, the four brains can breeze through difficult calculations faster than a supercomputer. This POK\u00e9MON can float in the air by tucking in its four legs.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/376/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/376.png"
+  },
+  {
+    "id": 384,
+    "name": "Rayquaza",
+    "type": "Dragon/Flying",
+    "stats": 680,
+    "entry": "RAYQUAZA lived for hundreds of millions of years in the earth\u2019s ozone layer, never descending to the ground. This POK\u00e9MON appears to feed on water and particles in the atmosphere.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/384/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png"
+  },
+  {
+    "id": 445,
+    "name": "Garchomp",
+    "type": "Dragon/Ground",
+    "stats": 600,
+    "entry": "When it folds up its body and extends its wings, it looks like a jet plane. It flies at sonic speed.",
+    "source": "https://pokeapi.co/api/v2/pokemon-species/445/",
+    "artwork_source": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/445.png"
+  }
+]
