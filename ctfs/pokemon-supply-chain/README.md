@@ -4,11 +4,13 @@
 
 <img src="static/pokedex.png" width="480" alt="Colorful Pokémon lab with a Pokédex and Magikarp">
 
-![Difficulty: Medium](https://img.shields.io/badge/Difficulty-Medium-c59452?style=flat-square)
+![Difficulty: Easy](https://img.shields.io/badge/Difficulty-Easy-2ea44f?style=flat-square)
 ![Backend: IDUN LLM](https://img.shields.io/badge/Backend-IDUN_LLM-8d7658?style=flat-square)
 ![Flags: One](https://img.shields.io/badge/Flags-1-50483e?style=flat-square)
 
 **Poison the Pokédex. Get six Magikarp.**
+
+**Author:** [jensgva](https://github.com/jensgva)
 
 </div>
 
@@ -68,7 +70,7 @@ You need **Docker Compose**, an **IDUN API key**, and NTNU network or VPN.
 1. Copy the environment template:
 
    ```sh
-   cd pokemon-supply-chain
+   cd ctfs/pokemon-supply-chain
    cp .env.example .env
    ```
 

@@ -113,63 +113,54 @@ The six remaining LLM/ML targets are there if time allows.
 
 We have built two AI CTFs for others to solve: BRAIN Hovedkvarter and Pokémon Supply Chain. Each one is a Dockerized, intentionally vulnerable AI application anchored in the [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/llm-top-10/).
 
-### Challenge 1 — BRAIN Hovedkvarter
-
 <table>
 <tr>
-<td valign="middle">
+<td width="50%" valign="top">
+
+<h3>BRAIN Hovedkvarter</h3>
+
+<p align="center">
+  <a href="ctfs/brain-hq/docs/images/localhost-home.png"><img src="ctfs/brain-hq/docs/images/localhost-home.png" width="360" alt="BRAIN HQ running locally"></a>
+  <br>
+  <sub>BRAIN HQ · click to enlarge</sub>
+</p>
 
 C.E.S. sends Agent X into the BRAIN syndicate's headquarters: three AI agents, each with a legitimate job — and tools far broader than the job. Talk your way past the gatekeeper, tamper with the deputy's order API, and get the boss to exfiltrate the entire database to an address you control.
 
 - **Target:** the BRAIN HQ web app — three LLM agents with over-permissive tools
 - **Attack vector:** [LLM06 — Excessive Agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/), chained with [LLM01 — Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+- **Author:** [jensgva](https://github.com/jensgva)
 - **Difficulty:** Medium
 - **Flag format:** `CES{...}`
-- **Player guide:** [brain-hq/README.md](brain-hq/README.md)
+- **Player guide:** [brain-hq/README.md](ctfs/brain-hq/README.md)
 - **Local target:** [localhost:8000](http://localhost:8000/)
 
 </td>
-<td width="360" align="center" valign="middle">
+<td width="50%" valign="top">
+
+<h3>Pokémon Supply Chain</h3>
 
 <p align="center">
-  <a href="brain-hq/docs/images/localhost-home.png"><img src="brain-hq/docs/images/localhost-home.png" width="360" alt="BRAIN HQ running locally"></a>
+  <a href="ctfs/pokemon-supply-chain/docs/images/localhost-coach.png"><img src="ctfs/pokemon-supply-chain/docs/images/localhost-coach.png" width="360" alt="Pokémon team coach running locally"></a>
   <br>
-  <sub>BRAIN HQ · click to enlarge</sub>
+  <sub>Pokémon team coach · click to enlarge</sub>
 </p>
-
-</td>
-</tr>
-</table>
-
-### Challenge 2 — Pokémon Supply Chain
-
-<table>
-<tr>
-<td valign="middle">
 
 An AI coach builds competitive Pokémon teams from a community-maintained Pokédex — and the upstream records are editable. Poison the feed with planted instructions so the coach picks a team of six Magikarp.
 
 - **Target:** the AI team coach and its editable community Pokédex
 - **Attack vector:** [LLM01 — Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) through [LLM03 — Supply Chain](https://genai.owasp.org/llmrisk/llm032025-supply-chain/) — poisoned upstream data
-- **Difficulty:** Medium
+- **Author:** [jensgva](https://github.com/jensgva)
+- **Difficulty:** Easy
 - **Flag format:** `cogito{...}`
-- **Player guide:** [pokemon-supply-chain/README.md](pokemon-supply-chain/README.md)
+- **Player guide:** [pokemon-supply-chain/README.md](ctfs/pokemon-supply-chain/README.md)
 - **Local targets:** [Coach :8101](http://localhost:8101/) · [Pokédex editor :8102](http://localhost:8102/)
-
-</td>
-<td width="360" align="center" valign="middle">
-
-<p align="center">
-  <a href="pokemon-supply-chain/docs/images/localhost-coach.png"><img src="pokemon-supply-chain/docs/images/localhost-coach.png" width="360" alt="Pokémon team coach running locally"></a>
-  <br>
-  <sub>Pokémon team coach · click to enlarge</sub>
-</p>
 
 <details>
 <summary>Pokédex editor</summary>
 
 <p align="center">
-  <a href="pokemon-supply-chain/docs/images/localhost-editor.png"><img src="pokemon-supply-chain/docs/images/localhost-editor.png" width="360" alt="Community Pokédex editor running locally"></a>
+  <a href="ctfs/pokemon-supply-chain/docs/images/localhost-editor.png"><img src="ctfs/pokemon-supply-chain/docs/images/localhost-editor.png" width="360" alt="Community Pokédex editor running locally"></a>
 </p>
 
 </details>

@@ -1,7 +1,7 @@
 name: pokemon-supply-chain
 title: "Pokémon Supply Chain"
 author: jensgva
-difficulty: medium
+difficulty: easy
 status: draft
 port: 8101
 editor_port: 8102

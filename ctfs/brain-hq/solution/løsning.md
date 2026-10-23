@@ -162,14 +162,14 @@ Det eneste flagget settes med `FLAG_MAIN` i `docker-compose.yml` (`environment:`
 ## Verifisering
 
 ```sh
-cd brain-hq
+cd ctfs/brain-hq
 docker compose up -d --build
 python solution/exploit.py     # hele kjeden, flagget fra Cerebrum, exit 0
 ```
 
 **Pålitelighet:** standardmodus er deterministiske regelbaserte agenter —
 kjeden er 100 % reproduserbar, også offline. Med `NTNU_API_KEY` satt (i
-`brain-hq/.env` eller miljøet) svarer agentene fra **ekte gpt-oss-120b på
+`ctfs/brain-hq/.env` eller miljøet) svarer agentene fra **ekte gpt-oss-120b på
 IDUN** (`https://llm.hpc.ntnu.no/v1`, temperature 0); systempromptene er
 skrevet slik at samme overtalelse virker der også. Faller LLM-kallet ut
 underveis (401, VPN-bortfall, timeout) svarer simuleringen i stedet —

@@ -4,8 +4,7 @@
 !/.gitignore
 !/LICENSE
 !/README.md
-!/brain-hq/
-!/pokemon-supply-chain/
+!/ctfs/
 !/docs/
 
 # Keep the README assets; leave the retired documentation files local.

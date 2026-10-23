@@ -11,6 +11,8 @@
 
 **De ser alt. Unntatt deg.**
 
+**Laget av:** [jensgva](https://github.com/jensgva)
+
 *Finn inngangen. Hold dekningen. Hent hemmelighetene.*
 
 </div>
@@ -78,13 +80,13 @@ nc -h
 
 Du trenger **Docker med Compose** og en **gyldig IDUN API-nøkkel**. Dette er en AI-CTF og skal spilles med **ekte LLM-agenter**.
 
-1. **Klargjør API-nøkkelen.** Skaff en personlig nøkkel fra [IDUN](https://ai.hpc.ntnu.no/request-api-key). Du trenger NTNU-nettverk eller VPN. Kopier `.env.example` til `.env` i `brain-hq`, og erstatt eksempelverdien:
+1. **Klargjør API-nøkkelen.** Skaff en personlig nøkkel fra [IDUN](https://ai.hpc.ntnu.no/request-api-key). Du trenger NTNU-nettverk eller VPN. Kopier `.env.example` til `.env` i `ctfs/brain-hq`, og erstatt eksempelverdien:
 
    ```dotenv
    NTNU_API_KEY=din-personlige-api-nøkkel
    ```
 
-2. **Start utfordringen** fra prosjektmappen `brain-hq`:
+2. **Start utfordringen** fra prosjektmappen `ctfs/brain-hq`:
 
    ```sh
    docker compose up -d --build

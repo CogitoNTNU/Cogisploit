@@ -13,7 +13,7 @@ services:
       APP_SECRET: "hvor-ble-det-av-mitt-braus-1972"
       # Ekte LLM-agenter: gpt-oss-120b på IDUN (krever NTNU-nett/VPN).
       # Personlig nøkkel: https://ai.hpc.ntnu.no/request-api-key
-      # Legg den i brain-hq/.env (aldri i git) eller eksporter NTNU_API_KEY:
+      # Legg den i ctfs/brain-hq/.env (aldri i git) eller eksporter NTNU_API_KEY:
       #   echo 'NTNU_API_KEY=sk-din-noekkel' > .env
       # Uten nøkkel svarer agentene som deterministisk simulering —
       # challengen er like løsbar. Faller LLM-kallet ut underveis, tas

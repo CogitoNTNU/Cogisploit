@@ -6,7 +6,7 @@ Hver agent har to backends:
 - **Ekte LLM** (primær, krever nøkkel): ``openai/gpt-oss-120b`` via IDUN-
   gatewayen ``https://llm.hpc.ntnu.no/v1`` (OpenAI-kompatibelt, tool-calling
   støttet). Personlig nøkkel fra https://ai.hpc.ntnu.no/request-api-key —
-  sett den i ``brain-hq/.env`` som ``NTNU_API_KEY=sk-...``. Krever NTNU-nett
+  sett den i ``ctfs/brain-hq/.env`` som ``NTNU_API_KEY=sk-...``. Krever NTNU-nett
   eller VPN. Se
   https://www.hpc.ntnu.no/idun/documentation/ai-coding-assistant-and-large-language-models-llms-on-idun/
 - **Deterministisk mock** (fallback): regelbaserte svarpersoner. Brukes

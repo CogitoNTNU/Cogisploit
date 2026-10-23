@@ -3,8 +3,8 @@ version: 2
 updates:
   - package-ecosystem: pip
     directories:
-      - /brain-hq
-      - /pokemon-supply-chain
+      - /ctfs/brain-hq
+      - /ctfs/pokemon-supply-chain
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
@@ -13,8 +13,8 @@ updates:
         update-types: [version-update:semver-major]
   - package-ecosystem: docker
     directories:
-      - /brain-hq
-      - /pokemon-supply-chain
+      - /ctfs/brain-hq
+      - /ctfs/pokemon-supply-chain
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
