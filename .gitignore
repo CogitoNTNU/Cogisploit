@@ -1,4 +1,4 @@
-# Keep only GitHub metadata and actual challenges in the repository.
+# Keep GitHub metadata, README assets and actual challenges in the repository.
 /*
 !/.github/
 !/.gitignore
@@ -6,6 +6,21 @@
 !/README.md
 !/brain-hq/
 !/pokemon-supply-chain/
+!/docs/
+
+# Keep the README assets; leave the retired documentation files local.
+/docs/*
+!/docs/images/
+/docs/images/*
+!/docs/images/cogisploit-logo.png
+!/docs/images/spacer.png
+!/docs/images/rounded/
+/docs/images/rounded/*
+!/docs/images/rounded/aisecuritylearningpaththm.png
+!/docs/images/rounded/cogisploitbanner.png
+!/docs/images/rounded/matrix.png
+!/docs/images/rounded/mirage.png
+!/docs/images/rounded/rouge2.png
 
 .env
 .env.*

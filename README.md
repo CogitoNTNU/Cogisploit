@@ -1,4 +1,4 @@
-<img src=".github/images/rounded/cogisploitbanner.png" width="100%" alt="Cogisploit banner">
+<img src="docs/images/rounded/cogisploitbanner.png" width="100%" alt="Cogisploit banner">
 
 <br>
 
@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Project Version](https://img.shields.io/badge/version-0.0.1-blue)](https://img.shields.io/badge/version-0.0.1-blue)
 
-<!-- <img src=".github/images/cogisploit-logo.png" width="50%" alt="Cogisploit logo"> -->
+<!-- <img src="docs/images/cogisploit-logo.png" width="50%" alt="Cogisploit logo"> -->
 
 </div>
 
@@ -44,7 +44,7 @@ Chatbots, RAG pipelines, autonomous agents and protocols like **A2A** open an at
 
 ## 🧭 The Journey
 
-| Phase | <img src=".github/images/spacer.png" align="left" width="100%" height="1" alt="">What                  | Status         |
+| Phase | <img src="docs/images/spacer.png" align="left" width="100%" height="1" alt="">What                  | Status         |
 | :---: | --------------------------------------------------------------------------------------------------- | -------------- |
 |   1   | [TryHackMe AI Security Path](#-phase-1--tryhackme-ai-security-learning-path) — guided fundamentals  | ✅ Completed   |
 |   2   | [ML CTF Challenges](#-phase-2--machine-learning-ctf-challenges) — agentic focus                     | 🔄 In progress |
@@ -58,7 +58,7 @@ Chatbots, RAG pipelines, autonomous agents and protocols like **A2A** open an at
 <tr>
 <td width="220" valign="middle">
 
-<img src=".github/images/rounded/aisecuritylearningpaththm.png" width="220" alt="TryHackMe AI Security learning path">
+<img src="docs/images/rounded/aisecuritylearningpaththm.png" width="220" alt="TryHackMe AI Security learning path">
 
 </td>
 <td valign="middle">
@@ -85,7 +85,7 @@ The remaining modules — AI Supply Chain Security, Data Poisoning — didn't fi
 
 Then the hands-on part: [alexdevassy's Machine Learning CTF Challenges](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges) — nine Dockerized targets spanning LLM backends, autonomous agents and ML models. We mainly worked the three **agentic** ones, with **Burp Suite**, custom scripts and manual analysis — digging into the **A2A protocol** and how trust between agents can be abused.
 
-| Challenge                                                                                                          | <img src=".github/images/spacer.png" align="left" width="100%" height="1" alt="">Attack vector | Difficulty |
+| Challenge                                                                                                          | <img src="docs/images/spacer.png" align="left" width="100%" height="1" alt="">Attack vector | Difficulty |
 | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | :--------: |
 | [Matrix](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges/tree/master/Matrix_AI_Agent_CTF_Challenge) | Insecure A2A agent capabilities — multi-agent system                                        |   Medium   |
 | [Mirage](https://github.com/alexdevassy/Machine_Learning_CTF_Challenges/tree/master/Mirage_CTF_Challenge)          | MCP signature cloaking → data exfiltration — SecureCode IDE + remote MCP server             |   Medium   |
@@ -94,9 +94,9 @@ Then the hands-on part: [alexdevassy's Machine Learning CTF Challenges](https://
 <br>
 
 <p align="center">
-  <img src=".github/images/rounded/matrix.png" alt="Matrix challenge" width="32%">&nbsp;
-  <img src=".github/images/rounded/mirage.png" alt="Mirage challenge" width="32%">&nbsp;
-  <img src=".github/images/rounded/rouge2.png" alt="Rogue challenge" width="32%">
+  <img src="docs/images/rounded/matrix.png" alt="Matrix challenge" width="32%">&nbsp;
+  <img src="docs/images/rounded/mirage.png" alt="Mirage challenge" width="32%">&nbsp;
+  <img src="docs/images/rounded/rouge2.png" alt="Rogue challenge" width="32%">
   <br>
   <sub><b>Matrix</b> &nbsp;·&nbsp; <b>Mirage</b> &nbsp;·&nbsp; <b>Rogue</b></sub>
 </p>
