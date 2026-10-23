@@ -1,14 +1,23 @@
 version: 2
 
 updates:
-  - package-ecosystem: "uv"
-    directory: "/"
+  - package-ecosystem: pip
+    directories:
+      - /brain-hq
+      - /pokemon-supply-chain
     schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "dependency: "
-      include: "scope"
+      interval: weekly
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+        update-types: [version-update:semver-major]
+  - package-ecosystem: docker
+    directories:
+      - /brain-hq
+      - /pokemon-supply-chain
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
