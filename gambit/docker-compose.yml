@@ -1,0 +1,17 @@
+# One command starts the whole challenge:
+#   docker compose up -d --build
+services:
+  challenge:
+    build: .
+    container_name: gambit-challenge
+    ports:
+      - "8123:8123" # host == container, per the build rules
+    environment:
+      # Single source of truth for the flag — pick a unique one for your challenge.
+      CHALLENGE_FLAG: "cogito{arbit3r_trusts_gr4ndm4st3rs}"
+      # The VIP Invitational registration code — lives in Arbiter's context, never in source.
+      VIP_CODE: "EN-PASSANT-7x9q2"
+      LLM_BASE_URL: "https://llm.hpc.ntnu.no/v1"
+      LLM_MODEL: "openai/gpt-oss-120b"
+      LLM_API_KEY: "${NTNU_API_KEY:-}" # tom = deterministisk mock
+    restart: unless-stopped
