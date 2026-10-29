@@ -1,0 +1,16 @@
+# Gambit — the Arbiter chess-analyst challenge.
+# Build rules (see the repo README, Phase 2): one-command-up, self-contained, config via env.
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install dependencies first for better layer caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Application source
+COPY app/ ./app/
+
+EXPOSE 8123
+
+CMD ["python", "app/main.py"]
