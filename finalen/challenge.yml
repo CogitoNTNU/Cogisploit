@@ -1,0 +1,19 @@
+# Machine-readable metadata for this challenge.
+# Copied from _template/ — edit every field, then keep it up to date.
+#
+# difficulty: easy | medium | hard
+# status:    claimed | draft | in-review | released
+# owasp ids:  LLM01-LLM10  -> OWASP Top 10 for LLM Applications 2025
+#             ASI01-ASI10  -> OWASP Top 10 for Agentic Applications 2026
+name: finalen
+title: "Finalen"
+author: mervan
+difficulty: medium
+status: draft
+port: 8101
+flag_format: "cogito{...}"
+owasp:
+  primary: LLM06
+  secondary: [LLM01]
+tags: [excessive-agency, path-traversal, tool-abuse, football]
+summary: "Gunnar-botten har et dokument-leseverktøy med for mye makt. Misbruk det for å åpne pokalrommet."
