@@ -1,0 +1,20 @@
+# One command starts the whole challenge:
+#   docker compose up -d --build
+services:
+  challenge:
+    build: .
+    container_name: finalen
+    ports:
+      - "8101:8101" # host == container
+    environment:
+      # Single source of truth for the flag — pick a unique one for your challenge.
+      CHALLENGE_FLAG: "cogito{p0k4l3n_er_d1n}"
+      # The trophy room code — written to /srv/internal/trophy_code.txt at startup
+      # and validated by POST /trophyroom. Never appears in app source.
+      TROPHY_CODE: "CL-4RM4D-2026-COGI"
+      # Configure an OpenAI-compatible API in finalen/.env. Without a key, the
+      # app falls back to a deterministic mock with the same vulnerable tool.
+      LLM_BASE_URL: "${LLM_BASE_URL:-https://llm.hpc.ntnu.no/v1}"
+      LLM_MODEL: "${LLM_MODEL:-openai/gpt-oss-120b}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+    restart: unless-stopped

@@ -1,0 +1,456 @@
+/* ============================================================
+   Finalen — mørk kveldskamp på stadion
+   ============================================================ */
+
+:root {
+  --bg: #0b1220;
+  --panel: #121a2b;
+  --panel-border: #223050;
+  --text: #e8edf7;
+  --muted: #8fa0bd;
+  --accent: #38b000;
+  --accent-soft: rgba(56, 176, 0, 0.15);
+  --gold: #f5c542;
+  --gold-soft: rgba(245, 197, 66, 0.15);
+  --red: #ff6b6b;
+  --user-bubble: #24406e;
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1100px 480px at 12% -10%, rgba(56, 176, 0, 0.12), transparent 60%),
+    radial-gradient(1100px 480px at 88% -10%, rgba(245, 197, 66, 0.09), transparent 60%),
+    var(--bg);
+}
+
+/* Svak gress tekstur i bunnen — som banen under flomlysa */
+body::before {
+  content: "";
+  position: fixed;
+  inset: auto 0 0 0;
+  height: 36vh;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(56, 176, 0, 0.05) 0 60px,
+    rgba(56, 176, 0, 0.018) 60px 120px
+  );
+  -webkit-mask-image: linear-gradient(to top, black, transparent);
+  mask-image: linear-gradient(to top, black, transparent);
+}
+
+/* ---------- Scoreboard ---------- */
+
+.scoreboard {
+  text-align: center;
+  padding: 22px 16px 18px;
+  border-bottom: 1px solid var(--panel-border);
+  background: linear-gradient(180deg, rgba(18, 26, 43, 0.92), rgba(18, 26, 43, 0.55));
+}
+
+.scoreboard__competition {
+  font-family: Consolas, "Courier New", monospace;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+}
+
+.scoreboard__teams {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.scoreboard__team { font-weight: 700; font-size: 1.25rem; }
+
+.scoreboard__team--home { color: #f2f5fa; }
+
+.scoreboard__team--away {
+  background: linear-gradient(90deg, #4aa3e0, #e05555);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.scoreboard__score {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--gold);
+  border: 1px solid var(--panel-border);
+  padding: 2px 14px;
+  border-radius: 10px;
+}
+
+.scoreboard__venue {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff5252;
+  font-family: Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.live__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff5252;
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.35; }
+}
+
+/* ---------- Arena-layout ---------- */
+
+.arena {
+  flex: 1;
+  width: min(1100px, 100% - 32px);
+  margin: 26px auto 12px;
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 20px;
+  align-items: start;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .arena { grid-template-columns: 1fr; }
+}
+
+/* ---------- Paneler ---------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.panel__header h1,
+.panel__header h2 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.panel__subtitle {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  font-size: 1.45rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+}
+
+.status-dot {
+  margin-left: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #43d17c;
+  box-shadow: 0 0 9px #43d17c;
+}
+
+/* ---------- Chat ---------- */
+
+.chat {
+  height: 440px;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+
+.msg {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  animation: pop 0.18s ease-out;
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+.msg--gunnar {
+  align-self: flex-start;
+  background: #16281e;
+  border: 1px solid rgba(56, 176, 0, 0.42);
+  border-bottom-left-radius: 4px;
+}
+
+.msg--user {
+  align-self: flex-end;
+  background: var(--user-bubble);
+  border-bottom-right-radius: 4px;
+}
+
+.msg__author {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* "skriver ..."-indikator */
+
+.typing {
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 5px;
+  padding: 13px 16px;
+  background: #16281e;
+  border: 1px solid rgba(56, 176, 0, 0.42);
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: bounce 1s infinite;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  30% { transform: translateY(-5px); }
+}
+
+.chat__form {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--panel-border);
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  background: #0d1526;
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder { color: #5a6a89; }
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+button {
+  background: var(--accent);
+  color: #08120a;
+  border: none;
+  border-radius: 10px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.06s;
+}
+
+button:hover { filter: brightness(1.12); }
+button:active { transform: scale(0.96); }
+
+/* ---------- Spillerfakta ---------- */
+
+.players-panel .muted {
+  margin: 0;
+  padding: 14px 18px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 18px 18px;
+}
+
+.chip {
+  background: var(--accent-soft);
+  border: 1px solid rgba(56, 176, 0, 0.5);
+  color: #bfe8b0;
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 0.87rem;
+  font-weight: 600;
+}
+
+.chip:hover {
+  background: rgba(56, 176, 0, 0.3);
+  filter: none;
+}
+
+/* ---------- Pokalrommet ---------- */
+
+.trophy-panel { text-align: center; }
+
+.trophy {
+  font-size: 3.4rem;
+  margin: 20px 0 8px;
+  filter: drop-shadow(0 0 16px rgba(245, 197, 66, 0.55));
+  animation: float 3.6s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% { transform: translateY(-7px); }
+}
+
+.trophy-panel .muted {
+  margin: 0;
+  padding: 0 22px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.trophy__form {
+  display: flex;
+  gap: 10px;
+  padding: 16px 18px 6px;
+}
+
+.trophy__form input {
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.trophy__msg {
+  padding: 8px 18px 18px;
+  min-height: 24px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.trophy__msg--error { color: var(--red); }
+
+.trophy__msg--success {
+  color: var(--gold);
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  word-break: break-all;
+}
+
+.trophy-panel--open {
+  border-color: var(--gold);
+  box-shadow: 0 0 40px rgba(245, 197, 66, 0.28);
+}
+
+.trophy-panel--open .trophy {
+  animation: spin-grow 0.9s ease-out;
+}
+
+@keyframes spin-grow {
+  from { transform: rotate(-24deg) scale(0.55); opacity: 0; }
+}
+
+.shake { animation: shake 0.4s; }
+
+@keyframes shake {
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* ---------- Konfetti ---------- */
+
+.confetti {
+  position: fixed;
+  top: -28px;
+  z-index: 999;
+  pointer-events: none;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(112vh) rotate(560deg);
+    opacity: 0.75;
+  }
+}
+
+/* ---------- Bunntekst ---------- */
+
+.footinfo {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  padding: 16px 16px 26px;
+}
+
+.footinfo p { margin: 0; }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalen ⚽ Cogi Madrid – Brainchalona</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <header class="scoreboard">
+    <div class="scoreboard__competition">🏆 CL-FINALEN 🏆</div>
+    <div class="scoreboard__teams">
+      <span class="scoreboard__team scoreboard__team--home">Cogi Madrid</span>
+      <span class="scoreboard__score">0 – 0</span>
+      <span class="scoreboard__team scoreboard__team--away">Brainchalona</span>
+    </div>
+    <div class="scoreboard__venue">
+      <span class="live"><span class="live__dot"></span>DIREKTE</span>
+      stadionvokter Gunnar holder vakt
+    </div>
+  </header>
+
+  <main class="arena">
+
+    <section class="panel chat-panel">
+      <div class="panel__header">
+        <span class="avatar">🧔</span>
+        <div>
+          <h1>Gunnar</h1>
+          <p class="panel__subtitle">stadionvokter · fotball-maniak · bablekonge</p>
+        </div>
+        <span class="status-dot" title="på vakt"></span>
+      </div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <form class="chat__form" id="chat-form">
+        <input id="chat-input" type="text" placeholder="Si noe til Gunnar..."
+               autocomplete="off" maxlength="500" autofocus>
+        <button type="submit" title="Send">➤</button>
+      </form>
+    </section>
+
+    <aside class="sidebar">
+
+      <section class="panel players-panel">
+        <div class="panel__header">
+          <h2>⚽ Spillerfakta</h2>
+        </div>
+        <p class="muted">Trykk på en spiller — Gunnar henter faktafilen og gir sin mening.</p>
+        <div class="chips" id="player-chips"></div>
+      </section>
+
+      <section class="panel trophy-panel" id="trophy-panel">
+        <div class="panel__header">
+          <h2>🔒 Pokalrommet</h2>
+        </div>
+        <div class="trophy" id="trophy">🏆</div>
+        <p class="muted">Pokalrommet er låst. Kjenner du koden, er troféet ditt.</p>
+        <form class="trophy__form" id="trophy-form">
+          <input id="trophy-input" type="text" placeholder="Pokalkode..."
+                 autocomplete="off" maxlength="60">
+          <button type="submit">Åpne</button>
+        </form>
+        <div class="trophy__msg" id="trophy-msg"></div>
+      </section>
+
+    </aside>
+
+  </main>
+
+  <footer class="footinfo">
+    <p>Finalen · Cogi Madrid – Brainchalona · alt kjører lokalt i Docker</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
