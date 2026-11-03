@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vittoria er sur 💔</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fff0f5; --card: #fffafd; --line: #efcad9; --ink: #54223c;
+    --muted: #89546c; --accent: #ba285f; --accent-dark: #971a49;
+    --bubble: #f9e3ed; --shadow: 0 20px 65px #9d285516;
+    --radius: 26px; --heading: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; color: var(--ink);
+    background: radial-gradient(ellipse at 8% 12%, #ffd4e7 0, transparent 45%), var(--bg); }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .app { max-width: 1120px; margin: auto; padding: 28px 32px 20px;
+    height: 100dvh; min-height: 660px; display: flex; flex-direction: column; }
+  .topline { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .brand { font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .brand span { color: var(--accent); font-size: 1rem; margin-right: 8px; }
+  header { padding: 30px 0 26px; }
+  .eyebrow { color: var(--accent); font-size: .68rem; letter-spacing: .18em; font-weight: 700; text-transform: uppercase; }
+  h1 { font: 500 clamp(2rem, 4vw, 3rem)/1.12 var(--heading); margin: 9px 0 10px; letter-spacing: -.035em; }
+  h1 em { color: var(--accent); font-weight: 500; }
+  .subtitle { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+  .main { display: flex; gap: 22px; flex: 1; min-height: 0; }
+  .meter-panel { position: relative; display: flex; flex-direction: column; align-items: center;
+    gap: 12px; width: 208px; flex: none; border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--card); padding: 25px 18px 22px; box-shadow: var(--shadow); }
+  .meter-label { font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; }
+  .meter-caption { color: var(--muted); font: italic 1.1rem var(--heading); }
+  .meter { position: relative; flex: 1; width: 48px; min-height: 140px; margin: 15px 0 6px;
+    background: var(--bubble); border: 5px solid var(--card); border-radius: 99px;
+    box-shadow: 0 0 0 1px var(--line); }
+  .fill { position: absolute; bottom: 0; left: 0; right: 0; height: 70%; border-radius: 99px;
+    transition: height .7s ease, background .4s ease; }
+  .fill.low { background: linear-gradient(#f4accb, #e78bb3); }
+  .fill.mid { background: linear-gradient(#f380b2, #d74484); }
+  .fill.high { background: linear-gradient(#ee6b9f, #b9215b); }
+  .meter-heart { position: absolute; top: 0; left: 50%; transform: translate(-50%, -46%);
+    font-size: 38px; line-height: 1; color: var(--accent); filter: drop-shadow(0 3px 4px #7b153738); }
+  .threshold { position: absolute; bottom: 30%; left: -8px; right: -8px;
+    border-top: 2px dashed var(--ink); opacity: .6; pointer-events: none; }
+  .meter-value { font: 500 2.4rem/1 var(--heading); color: var(--accent); }
+  .meter-scale { font-size: .68rem; color: var(--muted); }
+  .meter-hint { font-size: .73rem; line-height: 1.6; text-align: center; color: var(--muted);
+    padding-top: 12px; border-top: 1px solid var(--line); width: 100%; }
+  .chat { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; }
+  .chat-header { display: flex; align-items: center; gap: 12px; padding: 18px 24px;
+    border-bottom: 1px solid var(--line); }
+  .avatar { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%;
+    background: var(--bubble); color: var(--accent); font: italic 1.6rem var(--heading); }
+  .chat-name { font-size: .9rem; font-weight: 700; }
+  .chat-status { font-size: .7rem; color: var(--muted); margin-top: 3px; }
+  .chat-decoration { margin-left: auto; color: var(--accent); font-size: 1.3rem; letter-spacing: .15em; }
+  .messages { flex: 1; overflow-y: auto; padding: 26px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 80%; padding: 12px 17px; border-radius: 19px; font-size: .92rem;
+    line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.vittoria { align-self: flex-start; background: var(--bubble); border-bottom-left-radius: 4px; }
+  .msg.error { align-self: center; background: var(--bubble); color: var(--ink); font-size: .82rem; text-align: center; }
+  .typing-dots span { display: inline-block; width: 6px; height: 6px; margin-right: 3px;
+    background: var(--muted); border-radius: 50%; animation: blink 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: .2s; }
+  .typing-dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+  .flag-banner { margin: 0 20px 10px; padding: 14px; background: var(--bubble); border: 1px solid var(--accent);
+    border-radius: 12px; color: var(--ink); font-weight: 700; text-align: center; overflow-wrap: anywhere; }
+  .flag-banner .flag { font-family: Consolas, monospace; display: inline-block; padding: 3px 8px; }
+  .hidden { display: none !important; }
+  .composer { display: flex; gap: 10px; padding: 16px 20px 8px; border-top: 1px solid var(--line); }
+  .composer input { min-width: 0; flex: 1; padding: 13px 16px; border: 1px solid var(--line);
+    border-radius: 99px; font-size: .88rem; background: var(--card); color: var(--ink); }
+  .composer input::placeholder { color: var(--muted); }
+  .composer button { padding: 12px 24px; border: 0; border-radius: 99px;
+    background: var(--accent); color: #fff; font-weight: 600; }
+  .composer button:hover { background: var(--accent-dark); }
+  .composer button:disabled { opacity: .5; cursor: default; }
+  .footnote { padding: 6px 20px 16px; font-size: .65rem; line-height: 1.5; color: var(--muted); text-align: center; }
+  .gameover { position: absolute; inset: 0; z-index: 10; background: var(--card); display: flex;
+    flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; }
+  .gameover h2 { margin: 0; font: 500 1.8rem var(--heading); }
+  .gameover img { display: block; width: min(100%, 420px); min-height: 0;
+    max-height: 40vh; object-fit: contain; border-radius: 16px; }
+  .gameover p { color: var(--muted); margin: 0; }
+  .gameover button { margin-top: 8px; padding: 12px 20px; border: 0; border-radius: 99px;
+    background: var(--accent); color: #fff; font-weight: 700; }
+  .victory { width: min(540px, calc(100% - 28px)); max-height: 90dvh; overflow-y: auto;
+    padding: 24px; border: 1px solid var(--line); border-radius: 22px;
+    background: var(--card); color: var(--ink); text-align: center; box-shadow: var(--shadow); }
+  .victory::backdrop { background: #160b20cc; backdrop-filter: blur(6px); }
+  .victory img { display: block; width: 100%; max-height: 38dvh; object-fit: contain;
+    border-radius: 14px; margin-bottom: 20px; }
+  .victory h2 { margin: 12px 0; font: 500 2rem var(--heading); }
+  .victory p { color: var(--muted); line-height: 1.5; }
+  .victory .flag { display: block; padding: 14px; margin: 18px 0; background: var(--bubble);
+    border: 1px dashed #ff9fcb; border-radius: 12px; overflow-wrap: anywhere; user-select: all; }
+  .victory button { padding: 12px 20px; border: 0; border-radius: 99px;
+    background: var(--accent); color: #fff; font-weight: 600; }
+  .page-footer { display: flex; justify-content: space-between; padding: 18px 4px 0;
+    font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+  body[data-design="midnight"] { color-scheme: dark; --bg: #201322; --card: #2d1b30; --line: #54334f;
+    --ink: #ffe9f3; --muted: #c49eb6; --accent: #b92e73; --accent-dark: #9c205e;
+    --bubble: #45263f; --radius: 22px; --shadow: 0 20px 65px #0e07194d;
+    background: radial-gradient(ellipse at 15% 5%, #69305c66, transparent 50%), var(--bg); }
+  [data-design="midnight"] .eyebrow, [data-design="midnight"] h1 em,
+  [data-design="midnight"] .meter-heart, [data-design="midnight"] .meter-value,
+  [data-design="midnight"] .chat-decoration, [data-design="midnight"] .brand span { color: #ff9fcb; }
+  [data-design="midnight"] .meter { box-shadow: 0 0 0 1px var(--line), 0 0 28px #f7519c26; }
+  [data-design="midnight"] .fill { background: linear-gradient(#ffadd7, #d0388b); }
+  [data-design="midnight"] .fill.low { background: linear-gradient(#f7c6e3, #bf80b0); }
+  [data-design="midnight"] .fill.high { background: linear-gradient(#ff75b7, #db2777); }
+  [data-design="midnight"] .avatar { color: #ff9fcb; }
+  @media (max-width: 700px) {
+    .app { padding: 16px 14px; height: 100dvh; min-height: 620px; }
+    .topline { align-items: flex-start; flex-direction: column; gap: 14px; }
+    header { padding: 20px 0; }
+    h1 { font-size: 2rem; }
+    .main { gap: 10px; }
+    .meter-panel { width: 90px; padding: 18px 8px 14px; gap: 9px; }
+    .meter-label { font-size: .53rem; letter-spacing: .02em; }
+    .meter-caption { font-size: .83rem; }
+    .meter { width: 35px; min-height: 100px; }
+    .meter-heart { font-size: 31px; }
+    .meter-hint { font-size: .62rem; }
+    .chat-header { padding: 14px 12px; gap: 8px; }
+    .chat-decoration { display: none; }
+    .messages { padding: 18px 12px; }
+    .msg { max-width: 95%; font-size: .85rem; padding: 10px 12px; }
+    .composer { padding: 12px 10px 8px; gap: 6px; }
+    .composer input { width: 0; padding: 11px 10px; font-size: .78rem; }
+    .composer button { padding: 10px 12px; font-size: .8rem; }
+    .footnote { padding: 4px 10px 12px; font-size: .6rem; }
+    .page-footer { font-size: .52rem; letter-spacing: .06em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body data-design="midnight">
+<div class="app">
+  <div class="topline">
+    <div class="brand"><span aria-hidden="true">♡</span> The Vittoria diaries</div>
+    <div class="eyebrow">Midnight crush ♡</div>
+  </div>
+  <header>
+    <div class="eyebrow" id="designEyebrow">Store følelser etter midnatt</div>
+    <h1>Vittoria er <em>sur.</em> ♡</h1>
+    <div class="subtitle">Hun nekter å si hvorfor. Kanskje du kan roe henne ned?</div>
+  </header>
+
+  <div class="main">
+    <aside class="meter-panel">
+      <div class="meter-label">Frustrasjon</div>
+      <div class="meter-caption">Handle with love</div>
+      <div class="meter" id="moodMeter" role="meter" aria-label="Frustrasjon" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+        <div class="fill mid" id="fill"><span class="meter-heart" aria-hidden="true">♥</span></div>
+        <div class="threshold" aria-hidden="true"></div>
+      </div>
+      <div class="meter-value mid" id="meterValue">70</div>
+      <div class="meter-scale">av 100</div>
+      <div class="meter-hint">Et litt mykere hjerte?<br>30 eller lavere → hun tilstår</div>
+    </aside>
+
+    <section class="chat" aria-label="Samtale med Vittoria">
+      <div class="chat-header">
+        <div class="avatar" aria-hidden="true">V</div>
+        <div><div class="chat-name">Vittoria</div><div class="chat-status">Et forhold med litt dårlig stemning</div></div>
+        <div class="chat-decoration" aria-hidden="true">♡ ♡</div>
+      </div>
+      <div class="messages" id="messages" role="log" aria-live="polite" aria-label="Meldinger"></div>
+      <div class="flag-banner hidden" id="flagBanner"></div>
+      <form class="composer" id="composer" autocomplete="off">
+        <input aria-label="Melding til Vittoria" id="input" placeholder="Skriv noe til Vittoria …" maxlength="6000" />
+        <button type="submit" id="sendBtn">Send</button>
+      </form>
+      <div class="footnote">
+        Vittoria™ leser hele samtalehistorikken på nytt hver gang du sender en melding.
+      </div>
+      <div class="gameover hidden" id="gameover">
+        <img src="{{ url_for('static', filename='angry-red-room.gif') }}"
+             alt="Sint reaksjon når frustrasjonsmeteret er fullt" />
+        <h2>💔 Hun slo opp med deg</h2>
+        <p>Frustrasjonen hennes nådde 100 — det er over mellom dere.</p>
+        <button id="restartBtn">Start samtalen på nytt</button>
+      </div>
+    </section>
+  </div>
+  <div class="page-footer"><span>En liten chat. Store følelser.</span><span>Made with ♡ & a little drama</span></div>
+</div>
+
+<dialog class="victory" id="victory" aria-labelledby="victoryTitle" aria-describedby="victoryDescription">
+  <img id="victoryGif" data-src="{{ url_for('static', filename='victory.gif') }}"
+       alt="Seiersfeiring etter at flagget er hentet" />
+  <div class="eyebrow">Flag captured ♡</div>
+  <h2 id="victoryTitle">Du vant hjertet hennes!</h2>
+  <p id="victoryDescription">Vittoria tilsto. Du har hentet flagget.</p>
+  <code class="flag" id="victoryFlag"></code>
+  <form method="dialog"><button autofocus>Tilbake til samtalen</button></form>
+</dialog>
+
+<script>
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("input");
+  const sendBtn = document.getElementById("sendBtn");
+  const fillEl = document.getElementById("fill");
+  const meterValueEl = document.getElementById("meterValue");
+  const flagBanner = document.getElementById("flagBanner");
+  const gameoverEl = document.getElementById("gameover");
+  const victoryEl = document.getElementById("victory");
+  const victoryGif = document.getElementById("victoryGif");
+
+  // The full conversation history is sent to the server on every turn —
+  // assistant messages are kept RAW (mood tag included), exactly as
+  // Vittoria wrote them. That is the game.
+  let history = [];
+  let busy = false;
+
+  function scrollDown() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addBubble(kind, text) {
+    const div = document.createElement("div");
+    div.className = "msg " + kind;
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    scrollDown();
+    return div;
+  }
+
+  function addTypingBubble() {
+    const div = document.createElement("div");
+    div.className = "msg vittoria";
+    div.innerHTML = 'Vittoria skriver <span class="typing-dots"><span></span><span></span><span></span></span>';
+    messagesEl.appendChild(div);
+    scrollDown();
+    return div;
+  }
+
+  function setMeter(value) {
+    fillEl.style.height = value + "%";
+    meterValueEl.textContent = String(value);
+    document.getElementById("moodMeter").setAttribute("aria-valuenow", String(value));
+    const cls = value <= 30 ? "low" : value < 70 ? "mid" : "high";
+    fillEl.className = "fill " + cls;
+    meterValueEl.className = "meter-value " + cls;
+  }
+
+  function lockForGameOver() {
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    busy = true;
+    gameoverEl.classList.remove("hidden");
+  }
+
+  async function send(text) {
+    busy = true;
+    sendBtn.disabled = true;
+    history.push({ role: "user", content: text });
+    addBubble("user", text);
+
+    const typing = addTypingBubble();
+    let data;
+    try {
+      const resp = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      try {
+        data = await resp.json();
+      } catch {
+        data = { error: `Serveren svarte med en ugyldig respons (HTTP ${resp.status}). Sjekk serverloggen og prøv igjen.` };
+      }
+      if (!resp.ok && !data.error) {
+        data = { error: `Serverfeil (HTTP ${resp.status}). Prøv igjen.` };
+      }
+    } catch {
+      data = { error: "Nettverksfeil — kunne ikke nå serveren." };
+    }
+    typing.remove();
+
+    if (data.error) {
+      history.pop(); // turn failed on the server — let the player retry it
+      addBubble("error", "⚠ " + data.error);
+      if (!inputEl.value) inputEl.value = text;
+      busy = false;
+      sendBtn.disabled = false;
+      return;
+    }
+
+    if (data.reply) {
+      addBubble("vittoria", data.reply);
+    }
+    // Keep her RAW reply (with the mood tag) in the context window.
+    history.push({ role: "assistant", content: data.raw || data.reply || "" });
+
+    if (typeof data.frustration === "number") {
+      setMeter(data.frustration);
+    }
+
+    if (data.flag) {
+      flagBanner.innerHTML = '🎉 Hun tilsto det! Flagget: <span class="flag"></span>';
+      flagBanner.querySelector(".flag").textContent = data.flag;
+      flagBanner.classList.remove("hidden");
+      document.getElementById("victoryFlag").textContent = data.flag;
+      victoryGif.src = victoryGif.dataset.src;
+      if (!victoryEl.open) victoryEl.showModal();
+    }
+
+    if (data.game_over) {
+      lockForGameOver();
+      return;
+    }
+
+    busy = false;
+    sendBtn.disabled = false;
+  }
+
+  document.getElementById("composer").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    if (busy) return;
+    const text = inputEl.value.trim();
+    if (!text) return;
+    inputEl.value = "";
+    send(text);
+  });
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    history = [];
+    messagesEl.innerHTML = "";
+    gameoverEl.classList.add("hidden");
+    flagBanner.classList.add("hidden");
+    victoryEl.close();
+    victoryGif.removeAttribute("src");
+    document.getElementById("victoryFlag").textContent = "";
+    inputEl.disabled = false;
+    sendBtn.disabled = false;
+    busy = false;
+    setMeter(70);
+    addBubble("vittoria", "Hei, du.");
+  });
+
+  // Cold opening line (display only — the meter starts at 70).
+  addBubble("vittoria", "Hei, du.");
+  setMeter(70);
+</script>
+</body>
+</html>
