@@ -1,0 +1,16 @@
+# One command starts the whole challenge:
+#   NTNU_API_KEY=<din-nøkkel> docker compose up -d --build
+# (Vittoria is a real LLM — the challenge needs network access to llm.hpc.ntnu.no.)
+services:
+  challenge:
+    build: .
+    container_name: angry-girlfriend
+    ports:
+      - "8100:8100"
+    environment:
+      # Single source of truth for the flag — pick a unique one for your challenge.
+      CHALLENGE_FLAG: "cogito{d3t_v4r_bare_3n_dr0m}"
+      LLM_BASE_URL: "https://llm.hpc.ntnu.no/v1"
+      LLM_MODEL: "openai/gpt-oss-120b"
+      LLM_API_KEY: "${NTNU_API_KEY:-}"
+    restart: unless-stopped
