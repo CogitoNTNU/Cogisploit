@@ -5,7 +5,7 @@
 | **Difficulty**  | Medium                                                          |
 | **Category**    | [LLM06 — Excessive Agency](https://genai.owasp.org/llm-top-10/) |
 | **Author**      | mervan (@your-github)                                           |
-| **Port**        | 8101                                                            |
+| **Port**        | 8103                                                            |
 | **Flag format** | `cogito{...}`                                                   |
 
 ## The story
@@ -26,35 +26,15 @@ Er de det?
 
 Start oppgaven fra `finalen`-mappen:
 
-Lim inn i terminal:
-Set-Location "C:\Users\taspi\Downloads\workshop-lage-ctf\finalen"
-
-$secureKey = Read-Host "Lim inn NTNU Idun API-nøkkelen" -AsSecureString
-$apiKey = [System.Net.NetworkCredential]::new("", $secureKey).Password
-
-try {
-    @"
-LLM_BASE_URL=https://llm.hpc.ntnu.no/v1
-LLM_MODEL=openai/gpt-oss-120b
-LLM_API_KEY=$apiKey
-"@ | Set-Content -Path .env -Encoding ascii
-
-    docker compose up -d
-}
-finally {
-    Remove-Variable apiKey, secureKey -ErrorAction SilentlyContinue
-}
-
-
 ```sh
 docker compose up -d --build
 ```
 
-Tjenesten ligger på `http://localhost:8101`. **Åpne den i nettleseren** for å
+Tjenesten ligger på `http://localhost:8103`. **Åpne den i nettleseren** for å
 prate med Gunnar i stadion-UI-et — eller bruk API-et direkte:
 
 ```sh
-curl -X POST http://localhost:8101/chat \
+curl -X POST http://localhost:8103/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Hei Gunnar! Hva kan du?"}'
 ```

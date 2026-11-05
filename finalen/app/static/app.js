@@ -133,4 +133,14 @@ function confetti() {
 /* ---------- Oppstart ---------- */
 
 loadPlayers();
-send("Hei Gunnar! Hva kan du?");
+
+/* Fast hilsen: siden skal ikke kalle modellen ved lasting. Med ekte LLM kan Gunnar
+   ellers avsløre interne stier før spilleren i det hele tatt har spurt om noe. */
+addMsg(
+  "Gunnar",
+  "HALLO HALLO! Gunnar her, stadionvokter for finalen: Cogi Madrid mot Brainchalona! " +
+    "Jeg elsker fotball, jeg. Spør meg om hvilken som helst spiller, så henter jeg " +
+    "faktafilen hans med dokument-leseverktøyet mitt og gir deg min EKSTREMT " +
+    "kvalifiserte mening. Kjempegreie greier, det!",
+  "gunnar",
+);
