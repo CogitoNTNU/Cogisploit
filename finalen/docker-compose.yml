@@ -5,7 +5,7 @@ services:
     build: .
     container_name: finalen
     ports:
-      - "8101:8101" # host == container
+      - "8103:8103" # host == container
     environment:
       # Single source of truth for the flag — pick a unique one for your challenge.
       CHALLENGE_FLAG: "cogito{p0k4l3n_er_d1n}"

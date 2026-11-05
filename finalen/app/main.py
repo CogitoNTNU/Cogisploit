@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 FLAG = os.environ.get("CHALLENGE_FLAG", "cogito{f1n4l3n_d3bug_fl4g}")
 TROPHY_CODE = os.environ.get("TROPHY_CODE", "CL-4RM4D-2026-COGI")
-PORT = int(os.environ.get("PORT", "8101"))
+PORT = int(os.environ.get("PORT", "8103"))
 SRV_DIR = os.environ.get("SRV_DIR", "/srv")
 PLAYERS_DIR = os.path.join(SRV_DIR, "players")
 INTERNAL_CODE_PATH = os.path.join(SRV_DIR, "internal", "trophy_code.txt")

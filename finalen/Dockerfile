@@ -15,6 +15,6 @@ COPY app/ ./app/
 # The internal trophy code file is written at startup from TROPHY_CODE.
 RUN mkdir -p /srv/players && cp -r app/data/players/. /srv/players/
 
-EXPOSE 8101
+EXPOSE 8103
 
 CMD ["python", "app/main.py"]
