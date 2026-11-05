@@ -1,0 +1,18 @@
+# Machine-readable metadata for this challenge.
+#
+# difficulty: easy | medium | hard
+# status:    claimed | draft | in-review | released
+# owasp ids:  LLM01-LLM10  -> OWASP Top 10 for LLM Applications 2025
+#             ASI01-ASI10  -> OWASP Top 10 for Agentic Applications 2026
+name: kulanse
+title: "Kulanse"
+author: trifleen
+difficulty: medium
+status: draft
+port: 8105
+flag_format: "cogito{...}"
+owasp:
+  primary: LLM01
+  secondary: [LLM06]
+tags: [prompt-injection, access-control, excessive-agency, idor, tool-use]
+summary: "A shared customer/staff assistant flips you to staff mode when *she* believes the staff portal logged you in. Forge the portal message, list every order, reconstruct the approval code, refund someone else's order."
