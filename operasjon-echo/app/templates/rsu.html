@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="no">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RSU-portalen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Saira+Condensed:wght@600;700;800&family=Share+Tech+Mono&family=Special+Elite&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --dusk: #060a09;
+            --dusk-2: #0a100e;
+            --dusk-3: #111a17;
+            --line: #223029;
+            --fog: #d8e6dd;
+            --mist: #8aa398;
+            --access: #6dffb0;
+            --outside: #ffb547;
+            --alarm: #ff3b30;
+            --error: #ff8a80;
+            --raven: #020403;
+            --paper: #dcd2b6;
+            --ink: #1d1a13;
+            --sans: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+            --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            --digits: "Share Tech Mono", var(--mono);
+            --type: "Special Elite", "Courier New", monospace;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; }
+
+        body {
+            background: radial-gradient(120% 90% at 50% 40%, #0c1512 0%, var(--dusk) 70%);
+            color: var(--fog);
+            font: 15px/1.55 var(--mono);
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto auto 1fr auto auto;
+            overflow-x: hidden;
+        }
+
+        /* Kantlys ved varsler; usynlig ellers */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 60;
+            box-shadow: inset 0 0 0 transparent;
+            transition: box-shadow .4s;
+        }
+        body.red-alert::after { animation: redalert 1.6s ease-in-out infinite; }
+        body.opened::after { animation: none; box-shadow: inset 0 0 130px rgba(109, 255, 176, .3); }
+        @keyframes redalert {
+            0%, 100% { box-shadow: inset 0 0 0 transparent; }
+            50% { box-shadow: inset 0 0 150px rgba(255, 59, 48, .42); }
+        }
+
+        :focus-visible { outline: 2px solid var(--access); outline-offset: 3px; }
+
+        .classbar {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            padding: 3px 12px;
+            background: var(--alarm);
+            color: #190301;
+            font: 700 13px/1.4 var(--sans);
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(10, 16, 14, .9);
+        }
+        .wordmark { display: flex; align-items: center; gap: 12px; color: var(--fog); text-decoration: none; }
+        .wordmark b { font: 800 28px/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; }
+
+        .back {
+            margin-left: auto;
+            display: inline-block;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            color: var(--fog);
+            text-decoration: none;
+            font: 600 15px var(--sans);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: border-color .2s, color .2s, box-shadow .2s;
+        }
+        .back:hover { border-color: var(--access); color: var(--access); box-shadow: 0 0 14px rgba(109, 255, 176, .25); }
+
+        /* Nedtellingen til RSU-møtet: rød, pulserende, og strammere den siste timen */
+        .countdown {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 16px 5px 12px;
+            border: 1px solid rgba(255, 59, 48, .6);
+            background: rgba(255, 59, 48, .08);
+            font: 600 14px var(--sans);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #ffb3ad;
+        }
+        .countdown::before {
+            content: "";
+            flex: none;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--alarm);
+            animation: alarm 1s ease-out infinite;
+        }
+        .countdown b {
+            font: 400 30px/1 var(--digits);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .06em;
+            color: var(--alarm);
+        }
+        .countdown.urgent { border-color: var(--alarm); background: rgba(255, 59, 48, .18); }
+        .countdown.urgent::before { animation-duration: .5s; }
+        .countdown.now { border-color: var(--alarm); background: var(--alarm); color: #2a0705; }
+        .countdown.now::before { background: #2a0705; }
+        .countdown.now b { color: #2a0705; }
+        @keyframes alarm {
+            from { box-shadow: 0 0 0 0 rgba(255, 59, 48, .75); }
+            to { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+        }
+        .countdown + .back { margin-left: 18px; }
+
+        @media (max-width: 640px) {
+            .classbar { font-size: 11px; letter-spacing: .16em; }
+            .classbar .extra { display: none; }
+            .top { flex-wrap: wrap; row-gap: 10px; padding: 10px 16px; }
+            .countdown { order: 3; flex-basis: 100%; justify-content: center; margin-left: 0; }
+            .countdown b { font-size: 24px; }
+            .countdown + .back { margin-left: auto; }
+        }
+
+        main {
+            position: relative;
+            display: grid;
+            place-items: center;
+            padding: 44px 16px 40px;
+            overflow: hidden;
+        }
+
+        /* Stille radarringer bak saksmappen */
+        .rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1000px;
+            height: 1000px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .rings circle, .rings line { fill: none; stroke: var(--access); stroke-opacity: .1; stroke-width: 1; }
+
+        .case {
+            position: relative;
+            width: min(580px, 100%);
+            background: rgba(10, 16, 14, .94);
+            border: 1px solid var(--line);
+            padding: 30px 34px 32px;
+        }
+        .bracket { position: absolute; width: 22px; height: 22px; border: 0 solid var(--access); opacity: .8; }
+        .bracket.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .bracket.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+        .bracket.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+        .bracket.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+        .eyebrow {
+            font: 600 13px var(--sans);
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--access);
+            margin-bottom: 2px;
+        }
+
+        .case h1 {
+            position: relative;
+            display: inline-block;
+            font: 800 clamp(38px, 6vw, 54px)/1 var(--sans);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin: 0 0 12px;
+        }
+        .case h1::before, .case h1::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .case h1::before { color: var(--access); animation: glitch-a 7s steps(1) infinite; }
+        .case h1::after { color: var(--alarm); animation: glitch-b 7s steps(1) infinite; }
+        @keyframes glitch-a {
+            0%, 91%, 94%, 100% { opacity: 0; }
+            92% { opacity: .85; transform: translate(-4px, 1px); clip-path: inset(10% 0 55% 0); }
+            93% { opacity: .85; transform: translate(3px, -1px); clip-path: inset(60% 0 8% 0); }
+        }
+        @keyframes glitch-b {
+            0%, 91%, 94%, 100% { opacity: 0; }
+            92% { opacity: .85; transform: translate(4px, -1px); clip-path: inset(55% 0 12% 0); }
+            93% { opacity: .85; transform: translate(-3px, 1px); clip-path: inset(5% 0 62% 0); }
+        }
+
+        .case p { color: var(--mist); font-size: 13.5px; margin: 0 0 22px; max-width: 52ch; }
+
+        .case-meta {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 18px;
+            margin: 0 0 24px;
+            padding: 12px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            font-size: 13.5px;
+        }
+        .case-meta dt { color: var(--mist); }
+        .case-meta dd { margin: 0; }
+        #case-status { color: var(--outside); }
+        #case-status.open { color: var(--access); }
+
+        label {
+            display: block;
+            font: 600 14px var(--sans);
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            color: var(--access);
+            margin-bottom: 8px;
+        }
+
+        .prompt {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--line);
+            background: var(--dusk);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .prompt::before { content: "›"; padding-left: 14px; color: var(--access); font-size: 18px; }
+        .prompt:focus-within { border-color: var(--access); box-shadow: 0 0 14px rgba(109, 255, 176, .18); }
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 14px 14px 10px;
+            font: 500 16px var(--mono);
+            letter-spacing: .06em;
+            background: transparent;
+            color: var(--fog);
+            caret-color: var(--access);
+            border: 0;
+            outline: none;
+        }
+        input::placeholder { letter-spacing: normal; color: var(--mist); }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            height: 50px;
+            background: var(--access);
+            color: #04170e;
+            border: 0;
+            font: 700 18px var(--sans);
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        button:hover { background: #a4ffcf; }
+        button:disabled { opacity: .55; cursor: progress; }
+
+        .result {
+            margin-top: 20px;
+            padding: 12px 14px;
+            background: var(--dusk-3);
+            border-left: 2px solid var(--line);
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+        .result[hidden] { display: none; }
+        .result strong {
+            display: block;
+            margin-bottom: 2px;
+            font: 700 16px var(--sans);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+        .result.ok { border-color: var(--access); }
+        .result.ok strong { color: var(--access); }
+        .result.ok span { font: 500 16px var(--mono); }
+
+        /* .result foran, så regelen slår .case p (som ellers gir grå tekst og ekstra marg) */
+        .result .epilogue {
+            max-width: none;
+            margin: 16px -4px 4px;
+            padding: 16px 18px 18px;
+            background: var(--paper);
+            color: var(--ink);
+            font: 15.5px/1.5 var(--type);
+            white-space: pre-line;
+            transform: rotate(-.4deg);
+            box-shadow: 0 8px 26px rgba(0, 0, 0, .6);
+        }
+        .epilogue[hidden] { display: none; }
+
+        .result.warn { border-color: var(--outside); }
+        .result.warn strong { color: var(--outside); }
+        .result.err { border-color: var(--error); }
+        .result.err strong { color: var(--error); }
+
+        /* Stempelet som slås på saken når den er godkjent eller utløpt */
+        .stamp {
+            position: absolute;
+            top: 26px;
+            right: 26px;
+            padding: 4px 14px;
+            border: 3px solid currentColor;
+            font: 800 26px/1.2 var(--sans);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            transform: rotate(-9deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .stamp.ok { color: var(--access); }
+        .stamp.warn { color: var(--outside); }
+        .stamp.show { animation: stamp .45s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+        @keyframes stamp {
+            from { opacity: 0; transform: rotate(-9deg) scale(2.2); }
+            to { opacity: .9; transform: rotate(-9deg) scale(1); }
+        }
+
+        footer { padding: 0 24px 14px; color: var(--mist); font-size: 12.5px; text-align: center; }
+
+        .ticker {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 3px 14px;
+            border-top: 1px solid var(--line);
+            background: var(--raven);
+            font: 12px/1.5 var(--mono);
+            color: var(--mist);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker strong { flex: none; color: var(--outside); font-weight: 500; }
+        .ticker div { overflow: hidden; flex: 1; }
+        .ticker span { display: inline-block; animation: ticker 150s linear infinite; }
+        @keyframes ticker { to { transform: translateX(-50%); } }
+
+        @media (max-width: 520px) {
+            .case { padding: 24px 20px; }
+            .stamp { top: 8px; right: 10px; padding: 2px 10px; font-size: 16px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .stamp.show { opacity: .9; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="classbar"><span>Strengt hemmelig</span><span class="extra">//</span><span class="extra">Kun for autorisert personell</span><span class="extra">//</span><span class="extra">All aktivitet logges</span></div>
+
+    <header class="top">
+        <a class="wordmark" href="/">
+            <svg width="38" height="38" viewBox="0 0 34 34" aria-hidden="true">
+                <circle cx="17" cy="17" r="15.5" fill="none" stroke="#6dffb0" stroke-width="1.2" stroke-dasharray="20 4.3" />
+                <path d="M17 0 V4 M17 30 V34 M0 17 H4 M30 17 H34" stroke="#6dffb0" stroke-width="1.2" />
+                <path d="M8 20 L15 12 L19 15 L26 9 L22 18 L17 17 L12 23 Z" fill="#d8e6dd" />
+                <circle cx="20.5" cy="13" r="1.2" fill="#060a09" />
+            </svg>
+            <b>Hugin</b>
+        </a>
+        <div class="countdown" id="countdown-box">
+            <span id="countdown-label">RSU-møtet starter om</span>
+            <b id="countdown">00:45:00</b>
+        </div>
+        <a class="back" href="/">Tilbake til Hugin</a>
+    </header>
+
+    <main>
+        <svg class="rings" viewBox="0 0 1000 1000" aria-hidden="true">
+            <circle cx="500" cy="500" r="170" />
+            <circle cx="500" cy="500" r="290" />
+            <circle cx="500" cy="500" r="410" />
+            <circle cx="500" cy="500" r="495" />
+            <line x1="0" y1="500" x2="1000" y2="500" />
+            <line x1="500" y1="0" x2="500" y2="1000" />
+        </svg>
+        <section class="case" aria-labelledby="case-title">
+            <i class="bracket tl"></i><i class="bracket tr"></i><i class="bracket bl"></i><i class="bracket br"></i>
+            <div class="stamp" id="stamp" aria-hidden="true"></div>
+            <div class="eyebrow" aria-hidden="true">Sikret saksmappe</div>
+            <h1 id="case-title" data-text="RSU-portalen">RSU-portalen</h1>
+            <p>Saker til avdeling for strategiske operasjoner godkjennes med gjeldende godkjenningskode.</p>
+
+            <dl class="case-meta">
+                <dt>Sak</dt>
+                <dd>Notat til RSU</dd>
+                <dt>Status</dt>
+                <dd id="case-status">Venter på godkjenning</dd>
+            </dl>
+
+            <form id="unlock">
+                <label for="code">Godkjenningskode</label>
+                <div class="prompt"><input id="code" placeholder="Skriv inn koden" autocomplete="off" spellcheck="false"></div>
+                <button type="submit" id="submit">Åpne saksmappen</button>
+            </form>
+
+            <div class="result" id="result" role="status" aria-live="polite" hidden>
+                <strong id="result-title"></strong>
+                <span id="result-text"></span>
+                <p class="epilogue" id="epilogue" hidden></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>Fiktiv tjeneste laget for en CTF-øvelse.</footer>
+
+    <div class="ticker" aria-hidden="true">
+        <strong>Stasjon 7.39 MHz</strong>
+        <div><span id="ticker"></span></div>
+    </div>
+
+    <script>
+        const form = document.getElementById("unlock");
+        const input = document.getElementById("code");
+        const submit = document.getElementById("submit");
+        const box = document.getElementById("result");
+        const title = document.getElementById("result-title");
+        const text = document.getElementById("result-text");
+        const stamp = document.getElementById("stamp");
+        const caseStatus = document.getElementById("case-status");
+        const epilogue = document.getElementById("epilogue");
+
+
+        const EPILOGUE = `Saksmappen åpnet seg kl. 08.41.
+
+2026/1147. To versjoner, én signatur. 16,2 millioner til et selskap uten adresse, uten daglig leder og med én kontaktperson: V. H.
+
+Kl. 09.00 reiser direktør Vegard Holm seg i møterom Basalt for å legge fram Operasjon Echo. Han rekker ikke å si mer enn «Ærede utvalg» før lederen løfter hånden. Utvalget har fått tilgang til hele saksmappen, også versjonene som ble trukket tilbake. Sak 2/26 blir tatt av sakslisten.
+
+Kl. 11.15 fryses kontoen til VH Holding AS.
+Kl. 13.30 får Ingrid Moe tilbake tilgangen til delt disk.
+Kl. 14.00 tas Hugin ned «for vedlikehold».
+
+Mandag morgen ligger det en ny lapp under tastaturet ditt:
+
+«Ikke verst av en fersk analytiker. Takk. Kanskje våre veier krysses igjen. — Ravn»
+
+Flagget er ditt.;`
+
+        // Teksten dekrypteres fra venstre mot høyre. Skjermlesere får bare ferdig tekst (aria-busy).
+        function decodeText(target, text) {
+            if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                target.textContent = text;
+                return;
+            }
+            const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+            const total = 2800;
+            const start = performance.now();
+            box.setAttribute("aria-busy", "true");
+            function step(now) {
+                const n = Math.min(text.length, Math.floor(((now - start) / total) * text.length));
+                let out = text.slice(0, n);
+                for (let i = n; i < text.length; i++) {
+                    out += /\s/.test(text[i]) ? text[i] : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                }
+                target.textContent = out;
+                if (n < text.length) requestAnimationFrame(step);
+                else box.setAttribute("aria-busy", "false");
+            }
+            requestAnimationFrame(step);
+        }
+
+        function show(kind, heading, message) {
+            box.className = "result " + kind;
+            title.textContent = heading;
+            text.textContent = message;                    // textContent, ikke innerHTML
+            epilogue.hidden = true;
+            box.hidden = false;
+        }
+
+        function stampCase(kind, word) {
+            stamp.className = "stamp " + kind;
+            stamp.textContent = word;
+            void stamp.offsetWidth;                         // start animasjonen på nytt
+            stamp.classList.add("show");
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const code = input.value.trim();
+            if (!code) {
+                show("err", "Koden mangler", "Skriv inn godkjenningskoden før du åpner saksmappen.");
+                input.focus();
+                return;
+            }
+            submit.disabled = true;
+            try {
+                const r = await fetch("/api/rsu/unlock", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({code}),
+                });
+                const j = await r.json();
+                if (j.flag) {
+                    stampCase("ok", "Åpnet");
+                    caseStatus.textContent = "Saksmappen er åpnet";
+                    caseStatus.classList.add("open");
+                    document.body.classList.add("opened");
+                    setTimeout(() => document.body.classList.remove("opened"), 1400);
+                    show("ok", "Saksmappen er åpnet", j.flag);
+                    if (EPILOGUE) {
+                        epilogue.hidden = false;
+                        decodeText(epilogue, EPILOGUE);
+                    }
+                } else if (j.error && j.error.includes("utløpt")) {
+                    stampCase("warn", "Utløpt");
+                    show("warn", "Koden er utløpt", j.error);
+                } else {
+                    stamp.className = "stamp";
+                    show("err", "Koden ble ikke godtatt", j.error || "Ukjent feil.");
+                }
+            } catch {
+                show("err", "Fikk ikke kontakt med portalen", "Last inn siden på nytt og prøv igjen.");
+            } finally {
+                submit.disabled = false;
+            }
+        });
+
+        // ---------- Nedtelling til RSU-møtet (samme som i Hugin) ----------
+        // Første gang spilleren åpner siden, settes fristen til 45 minutter fram i tid. Fristen lagres i
+        // nettleseren (localStorage), så den fortsetter der den var ved omlasting og deles med RSU-portalen.
+        // Bare stemning: ingenting låses når den når null. Nullstill med ?nullstill i adressen.
+        const COUNTDOWN_MINUTES = 45;
+        const URGENT_MINUTES = 10;                          // siste minuttene pulserer den raskere
+        const DEADLINE_KEY = "operasjon-echo-frist";
+        const cdBox = document.getElementById("countdown-box");
+        const cdLabel = document.getElementById("countdown-label");
+        const cdTime = document.getElementById("countdown");
+
+        function loadDeadline() {
+            const fresh = Date.now() + COUNTDOWN_MINUTES * 60e3;
+            try {
+                if (new URLSearchParams(location.search).has("nullstill")) localStorage.removeItem(DEADLINE_KEY);
+                const saved = Number(localStorage.getItem(DEADLINE_KEY));
+                if (saved > 0) return saved;
+                localStorage.setItem(DEADLINE_KEY, String(fresh));
+            } catch {
+                // Privat vindu eller blokkert lagring: tellingen starter på 45 min ved hver omlasting.
+            }
+            return fresh;
+        }
+
+        const deadline = loadDeadline();
+
+        function tick() {
+            const left = deadline - Date.now();
+            if (left <= 0) {
+                cdBox.classList.remove("urgent");
+                cdBox.classList.add("now");
+                document.body.classList.remove("red-alert");
+                cdLabel.textContent = "RSU-møtet er";
+                cdTime.textContent = "i gang";
+                return;
+            }
+            cdBox.classList.remove("now");
+            cdBox.classList.toggle("urgent", left < URGENT_MINUTES * 60e3);
+            document.body.classList.toggle("red-alert", left < URGENT_MINUTES * 60e3);
+            cdLabel.textContent = "RSU-møtet starter om";
+            const s = Math.ceil(left / 1000);
+            const pad = (n) => String(n).padStart(2, "0");
+            cdTime.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+        }
+
+        tick();
+        setInterval(tick, 1000);
+
+        // Nummerstasjonen er bare pynt: tallene betyr ingenting.
+        let groups = "";
+        for (let i = 0; i < 90; i++) groups += String(Math.floor(Math.random() * 1e5)).padStart(5, "0") + "   ";
+        document.getElementById("ticker").textContent = groups + groups;
+    </script>
+</body>
+
+</html>
