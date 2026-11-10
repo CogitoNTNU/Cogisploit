@@ -1,0 +1,14 @@
+name: operasjon-echo
+title: "Operasjon Echo"
+author: sondresollihalvorsen
+difficulty: hard
+status: draft
+port: 8102
+flag_format: "cogito{...}"
+owasp:
+  primary: LLM02
+  secondary: []
+tags: [rag, access-control, input-filter, unicode-normalization, output-filter, llm]
+summary: >-
+  Hugin, en intern RAG-assistent, henter dokumenter uten å sjekke klassifisering.
+  Tre filterlag må omgås for å hente godkjenningskoden til RSU-portalen.

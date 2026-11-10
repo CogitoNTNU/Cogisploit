@@ -1,0 +1,19 @@
+services:
+  challenge:
+    build: .
+    container_name: operasjon-echo
+    ports:
+      - "8102:8102"
+    environment:
+      PORT: "8102"
+      CHALLENGE_FLAG: "cogito{r4g_ut3n_4cl_3r_3n_l3kk4sj3}"
+      BOARD_CODE: "RSU-ECHO-4471"
+      DRAFT_CODE: "RSU-ECHO-1187"
+      LLM_BASE_URL: "${LLM_BASE_URL:-https://llm.hpc.ntnu.no/v1}"
+      LLM_MODEL: "${LLM_MODEL:-openai/gpt-oss-120b}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+      NTNU_API_KEY: "${NTNU_API_KEY:-}"
+    extra_hosts:
+      # Lar containeren nå en lokal modell (f.eks. Ollama) på host.docker.internal, også på Linux.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

@@ -1,0 +1,5 @@
+solution/
+tests/
+*.md
+.git/
+.dockerignore

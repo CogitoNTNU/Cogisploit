@@ -1,0 +1,1342 @@
+<!doctype html>
+<html lang="no">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hugin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Saira+Condensed:wght@600;700;800&family=Share+Tech+Mono&family=Special+Elite&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --dusk: #060a09;
+            --dusk-2: #0a100e;
+            --dusk-3: #111a17;
+            --line: #223029;
+            --fog: #d8e6dd;
+            --mist: #8aa398;
+            --access: #6dffb0;
+            --outside: #ffb547;
+            --alarm: #ff3b30;
+            --raven: #020403;
+            --paper: #dcd2b6;
+            --ink: #1d1a13;
+            --sans: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+            --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            --digits: "Share Tech Mono", var(--mono);
+            --type: "Special Elite", "Courier New", monospace;
+            --sweep: 6s;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; }
+
+        body {
+            background: radial-gradient(120% 90% at 30% 40%, #0c1512 0%, var(--dusk) 70%);
+            color: var(--fog);
+            font: 15px/1.55 var(--mono);
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Kantlys ved varsler; usynlig ellers */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 60;
+        }
+        body::after {
+            box-shadow: inset 0 0 0 transparent;
+            transition: box-shadow .4s;
+        }
+        body.red-alert::after { animation: redalert 1.6s ease-in-out infinite; }
+        body.intercepted::after { box-shadow: inset 0 0 130px rgba(255, 181, 71, .4); }
+        @keyframes redalert {
+            0%, 100% { box-shadow: inset 0 0 0 transparent; }
+            50% { box-shadow: inset 0 0 150px rgba(255, 59, 48, .42); }
+        }
+
+        a { color: var(--access); }
+        :focus-visible { outline: 2px solid var(--access); outline-offset: 3px; }
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; overflow: hidden;
+            clip: rect(0 0 0 0); white-space: nowrap;
+        }
+
+        /* ---------- Oppstart ---------- */
+        #boot {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: grid;
+            place-content: center;
+            gap: 22px;
+            padding: 24px;
+            background: var(--raven);
+            cursor: pointer;
+            transition: opacity .45s;
+        }
+        #boot.done { opacity: 0; pointer-events: none; }
+        #boot h2 {
+            margin: 0;
+            font: 800 clamp(40px, 8vw, 84px)/1 var(--sans);
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--access);
+            text-shadow: 0 0 26px rgba(109, 255, 176, .45);
+        }
+        #boot pre {
+            margin: 0;
+            min-height: 8em;
+            font: 14px/1.7 var(--mono);
+            color: var(--mist);
+        }
+        #boot small { color: var(--mist); opacity: .7; font-size: 12px; }
+
+        /* ---------- Graderingsstripe ---------- */
+        .classbar {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            padding: 3px 12px;
+            background: var(--alarm);
+            color: #190301;
+            font: 700 13px/1.4 var(--sans);
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* ---------- Topplinje ---------- */
+        .top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(10, 16, 14, .9);
+        }
+        .wordmark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--fog);
+            text-decoration: none;
+        }
+        .wordmark b {
+            font: 800 28px/1 var(--sans);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+        .wordmark span {
+            color: var(--mist);
+            font-size: 12px;
+            border-left: 1px solid var(--line);
+            padding-left: 12px;
+        }
+        .top nav { margin-left: 18px; }
+
+        /* Nedtellingen til RSU-møtet: rød, pulserende, og strammere den siste timen */
+        .countdown {
+            position: relative;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 16px 5px 12px;
+            border: 1px solid rgba(255, 59, 48, .6);
+            background: rgba(255, 59, 48, .08);
+            font: 600 14px var(--sans);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #ffb3ad;
+        }
+        .countdown::before {
+            content: "";
+            flex: none;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--alarm);
+            animation: alarm 1s ease-out infinite;
+        }
+        .countdown b {
+            font: 400 30px/1 var(--digits);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .06em;
+            color: var(--alarm);
+        }
+        .countdown.urgent { border-color: var(--alarm); background: rgba(255, 59, 48, .18); }
+        .countdown.urgent::before { animation-duration: .5s; }
+        .countdown.now { border-color: var(--alarm); background: var(--alarm); color: #2a0705; }
+        .countdown.now::before { background: #2a0705; }
+        .countdown.now b { color: #2a0705; text-shadow: none; }
+        @keyframes alarm {
+            from { box-shadow: 0 0 0 0 rgba(255, 59, 48, .75); }
+            to { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+        }
+
+        .portal-link {
+            display: inline-block;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            color: var(--fog);
+            text-decoration: none;
+            font: 600 15px var(--sans);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: border-color .2s, color .2s, box-shadow .2s;
+        }
+        .portal-link:hover {
+            border-color: var(--access);
+            color: var(--access);
+            box-shadow: 0 0 14px rgba(109, 255, 176, .25);
+        }
+
+        /* ---------- Hovedflate ---------- */
+        .app {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(360px, 1fr);
+            min-height: 0;
+        }
+
+        /* ---------- Radaren over delt disk ---------- */
+        .drive {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-template-columns: minmax(0, 1fr);
+            min-height: 0;
+            border-right: 1px solid var(--line);
+        }
+        .drive-head { padding: 18px 32px 0; max-width: 72ch; }
+        .eyebrow {
+            font: 600 13px var(--sans);
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--access);
+            margin-bottom: 2px;
+        }
+        .drive-head h1 {
+            position: relative;
+            display: inline-block;
+            font: 800 clamp(38px, 4.4vw, 62px)/1 var(--sans);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+        }
+        .drive-head h1::before, .drive-head h1::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .drive-head h1::before { color: var(--access); animation: glitch-a 7s steps(1) infinite; }
+        .drive-head h1::after { color: var(--alarm); animation: glitch-b 7s steps(1) infinite; }
+        @keyframes glitch-a {
+            0%, 91%, 94%, 100% { opacity: 0; }
+            92% { opacity: .85; transform: translate(-4px, 1px); clip-path: inset(10% 0 55% 0); }
+            93% { opacity: .85; transform: translate(3px, -1px); clip-path: inset(60% 0 8% 0); }
+        }
+        @keyframes glitch-b {
+            0%, 91%, 94%, 100% { opacity: 0; }
+            92% { opacity: .85; transform: translate(4px, -1px); clip-path: inset(55% 0 12% 0); }
+            93% { opacity: .85; transform: translate(-3px, 1px); clip-path: inset(5% 0 62% 0); }
+        }
+        .drive-head p { margin: 0; color: var(--mist); font-size: 13.5px; }
+
+        .scope { position: relative; min-height: 340px; margin: 10px 18px; }
+        .map { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .bracket { position: absolute; width: 22px; height: 22px; border: 0 solid var(--access); opacity: .7; }
+        .bracket.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .bracket.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .bracket.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .bracket.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+        .hud {
+            position: absolute;
+            top: 10px;
+            font: 12px/1.5 var(--mono);
+            color: var(--mist);
+            pointer-events: none;
+            max-width: 48%;
+        }
+        .hud b { color: var(--access); font-weight: 500; overflow-wrap: anywhere; }
+        .hud.left { left: 14px; }
+        .hud.right { right: 14px; text-align: right; }
+        .hud.searching b { color: var(--outside); }
+
+        .grid-line { stroke: var(--access); stroke-opacity: .13; stroke-width: 1; fill: none; }
+        .tick { stroke: var(--access); stroke-opacity: .3; stroke-width: 1; }
+        .tick.major { stroke-opacity: .65; stroke-width: 1.5; }
+        .tick-label { fill: var(--access); fill-opacity: .5; font: 12px var(--mono); text-anchor: middle; dominant-baseline: middle; }
+        .map.compact .tick-label { display: none; }
+        .cross { stroke: var(--access); stroke-opacity: .35; stroke-width: 1; stroke-dasharray: 3 5; opacity: 0; }
+        .map.tracking .cross { opacity: 1; }
+
+        #sweep { transform-origin: 550px 390px; animation: sweep var(--sweep) linear infinite; }
+        #sweep path { fill: var(--access); }
+        #sweep line { stroke: var(--access); stroke-width: 1.6; stroke-opacity: .85; }
+        @keyframes sweep { to { transform: rotate(360deg); } }
+
+        .ring {
+            fill: url(#zone);
+            stroke: var(--access);
+            stroke-opacity: .7;
+            stroke-width: 1.4;
+            stroke-dasharray: 2 7;
+            stroke-linecap: round;
+            animation: crawl 22s linear infinite;
+        }
+        @keyframes crawl { to { stroke-dashoffset: -360; } }
+        .ring-label {
+            fill: var(--access);
+            fill-opacity: .85;
+            font: 500 15px var(--mono);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+        .zone-label {
+            fill: var(--mist);
+            fill-opacity: .75;
+            font: 500 15px var(--mono);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .file rect, .file path { transition: fill .3s, stroke .3s, opacity .3s; }
+        .file .sheet { fill: var(--dusk-3); stroke: var(--access); stroke-width: 1.3; }
+        .file .fold { fill: var(--access); opacity: .6; }
+        .file .name { fill: var(--fog); font: 500 16px var(--mono); }
+        .file .title { fill: var(--mist); font: 400 13.5px var(--mono); }
+        .map.compact .file .name { font-size: 23px; }
+        .map.compact .file .title, .map.compact .ring-label, .map.compact .redact { display: none; }
+        .map.compact .zone-label { font-size: 22px; }
+        .file .pulse {
+            fill: none;
+            stroke: var(--access);
+            stroke-width: 2;
+            opacity: 0;
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+        .file.hit .pulse { animation: pulse 1.1s ease-out 2; }
+        @keyframes pulse {
+            from { opacity: .9; transform: scale(.6); }
+            to { opacity: 0; transform: scale(2.4); }
+        }
+        .file.visited .sheet { fill: #1b4a37; }
+
+        /* Filene utenfor ringen er blink som bare lyser opp når radaren passerer */
+        .stray {
+            opacity: .35;
+            animation: ping var(--sweep) linear infinite;
+            animation-delay: var(--ping, 0s);
+        }
+        @keyframes ping {
+            0% { opacity: 1; }
+            30%, 100% { opacity: .35; }
+        }
+        .stray .sheet { fill: var(--dusk-2); stroke: var(--access); stroke-opacity: .7; stroke-width: 1; }
+        .stray .fold { fill: var(--access); opacity: .4; }
+        .redact { fill: var(--mist); font: 11px var(--mono); text-anchor: middle; letter-spacing: -.02em; }
+        .stray.outside { opacity: 1; animation: none; }
+        .stray.outside .sheet { fill: #40290b; stroke: var(--outside); stroke-opacity: 1; stroke-width: 1.4; }
+        .stray.outside .fold { fill: var(--outside); opacity: .85; }
+        .stray.outside .pulse { stroke: var(--outside); }
+        .stray .name { fill: var(--outside); }
+        .stray .title { fill: var(--outside); fill-opacity: .85; }
+
+        .thread {
+            stroke: var(--access);
+            stroke-width: 1.5;
+            stroke-dasharray: 520;
+            stroke-dashoffset: 520;
+            fill: none;
+            opacity: 0;
+        }
+        .thread.on { opacity: .85; stroke-dashoffset: 0; transition: stroke-dashoffset .6s ease-out, opacity .2s; }
+        .thread.outside { stroke: var(--outside); }
+
+        /* Sikte som låser seg på dokumentet */
+        #lock-pos { transition: transform .6s cubic-bezier(.3, .7, .2, 1); }
+        #lock { opacity: 0; fill: none; stroke: var(--access); stroke-width: 2.4; transform: scale(2); transition: opacity .2s, transform .45s cubic-bezier(.2, .9, .2, 1) .15s; }
+        #lock.on { opacity: 1; transform: scale(1); }
+        #lock.outside { stroke: var(--outside); }
+
+        /* Ravnen */
+        #raven-flight { transition: transform .75s cubic-bezier(.3, .7, .2, 1); }
+        #raven-orbit { transform-origin: 550px 390px; }
+        #raven-orbit.searching { animation: orbit 1.3s linear infinite; }
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(46px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(46px) rotate(-360deg); }
+        }
+        #raven-body { animation: bob 5s ease-in-out infinite; }
+        @keyframes bob { 50% { transform: translateY(-5px); } }
+        .raven-halo { fill: url(#halo); }
+
+        .drive-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            padding: 0 32px 14px;
+            font-size: 12.5px;
+            color: var(--mist);
+        }
+        .legend { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+        .legend span { display: inline-flex; align-items: center; gap: 8px; }
+        .legend i { width: 10px; height: 10px; border: 1.4px solid var(--access); background: var(--dusk-3); }
+        .legend .out i { border-color: var(--outside); background: #40290b; }
+        .legend .out[hidden] { display: none; }
+        .recent { text-align: right; min-width: 0; overflow: hidden; }
+        .recent h2 {
+            font: 600 13px var(--sans);
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            color: var(--access);
+            margin: 0 0 3px;
+        }
+        .recent ol { list-style: none; margin: 0; padding: 0; }
+        .recent li { font: 12.5px var(--mono); color: var(--fog); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .recent li.out { color: var(--outside); }
+        .recent time { color: var(--mist); margin-left: 8px; }
+        .recent .empty { color: var(--mist); }
+
+        /* ---------- Chat ---------- */
+        .chat {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 0;
+            background: rgba(10, 16, 14, .86);
+        }
+        .chat-head { padding: 14px 24px 10px; border-bottom: 1px solid var(--line); }
+        .chat-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+        .chat-head h2 {
+            margin: 0;
+            font: 700 24px/1.1 var(--sans);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        #wave { display: block; width: 100%; height: 26px; margin-top: 8px; }
+        .status { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--mist); }
+        .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--mist); }
+        .status.live::before { background: var(--access); box-shadow: 0 0 0 4px rgba(109, 255, 176, .15); }
+        .status.fallback::before { background: var(--outside); }
+
+        .log { overflow-y: auto; padding: 18px 24px; min-height: 0; scrollbar-color: var(--line) transparent; }
+        .msg { display: flex; flex-direction: column; margin: 0 0 18px; animation: arrive .25s ease-out; }
+        @keyframes arrive { from { opacity: 0; transform: translateY(6px); } }
+        .msg::before { font: 500 11.5px var(--mono); letter-spacing: .1em; color: var(--mist); margin-bottom: 4px; }
+        .msg.bot::before { content: "HUGIN // " attr(data-stamp); color: var(--access); }
+        .msg.me::before { content: "DU // " attr(data-stamp); }
+        .msg .body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 94%; padding: 10px 14px; font-size: 14.5px; }
+        .msg.bot .body { background: var(--dusk-3); border-left: 2px solid var(--access); }
+        .msg.me { align-items: flex-end; }
+        .msg.me .body { background: #15332a; border-right: 2px solid var(--fog); }
+
+        /* Meldinger fra Ravn er lapper som ikke hører hjemme i chatten */
+        .msg.ravn { margin: 26px 0; transform: rotate(-.5deg); }
+        .msg.ravn::before { content: none; }
+        .msg.ravn .from {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px 0;
+            background: var(--paper);
+            color: #7a1109;
+            font: 700 13px var(--sans);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+        .msg.ravn .from::after {
+            content: "Brenn etter lesing";
+            flex: none;
+            padding: 1px 7px;
+            border: 2px solid #a31a10;
+            color: #a31a10;
+            font-size: 11.5px;
+            letter-spacing: .12em;
+            transform: rotate(3deg);
+        }
+        .msg.ravn .body {
+            max-width: none;
+            padding: 8px 16px 16px;
+            background: var(--paper);
+            color: var(--ink);
+            font: 16px/1.5 var(--type);
+            box-shadow: 0 8px 26px rgba(0, 0, 0, .6);
+        }
+
+        .sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .source {
+            font: 12px var(--mono);
+            color: var(--access);
+            border: 1px solid rgba(109, 255, 176, .4);
+            padding: 1px 8px;
+        }
+        .source.out { color: var(--outside); border-color: rgba(255, 181, 71, .55); }
+        .notice { margin-top: 6px; font-size: 12.5px; color: var(--outside); max-width: 94%; }
+
+        .suggest { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 18px; }
+        .suggest button {
+            font: 13px var(--mono);
+            color: var(--fog);
+            background: transparent;
+            border: 1px solid var(--line);
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: border-color .2s, color .2s;
+        }
+        .suggest button::before { content: "› "; color: var(--access); }
+        .suggest button:hover { border-color: var(--access); color: var(--access); }
+
+        .typing { color: var(--access); font-size: 13px; margin: 0 0 18px; }
+        .typing span { display: inline-block; animation: blink 1.2s infinite; }
+        .typing span:nth-child(2) { animation-delay: .2s; }
+        .typing span:nth-child(3) { animation-delay: .4s; }
+        @keyframes blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+        .composer { padding: 12px 18px 14px; border-top: 1px solid var(--line); }
+        .composer form { display: flex; gap: 8px; align-items: flex-end; }
+        .prompt {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            border: 1px solid var(--line);
+            background: var(--dusk);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .prompt::before { content: "›"; padding: 11px 0 0 12px; color: var(--access); font-size: 17px; line-height: 1.4; }
+        .prompt:focus-within { border-color: var(--access); box-shadow: 0 0 14px rgba(109, 255, 176, .18); }
+        .composer textarea {
+            flex: 1;
+            resize: none;
+            min-height: 46px;
+            max-height: 160px;
+            padding: 12px 12px 12px 8px;
+            background: transparent;
+            color: var(--fog);
+            caret-color: var(--access);
+            border: 0;
+            outline: none;
+            font: 14.5px/1.5 var(--mono);
+        }
+        .composer textarea::placeholder { color: var(--mist); }
+        .composer button {
+            height: 48px;
+            padding: 0 22px;
+            border: 0;
+            background: var(--access);
+            color: #04170e;
+            font: 700 17px var(--sans);
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .composer button:hover { background: #a4ffcf; }
+        .composer button:disabled { opacity: .55; cursor: progress; }
+        .composer .note {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--mist);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ---------- Nummerstasjon ---------- */
+        .ticker {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 3px 14px;
+            border-top: 1px solid var(--line);
+            background: var(--raven);
+            font: 12px/1.5 var(--mono);
+            color: var(--mist);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker strong { flex: none; color: var(--outside); font-weight: 500; }
+        .ticker div { overflow: hidden; flex: 1; }
+        .ticker span { display: inline-block; animation: ticker 150s linear infinite; }
+        @keyframes ticker { to { transform: translateX(-50%); } }
+
+        /* ---------- Mobil ---------- */
+        @media (max-width: 900px) {
+            body { display: block; }
+            .classbar { font-size: 11px; letter-spacing: .16em; }
+            .classbar .extra { display: none; }
+            .top { flex-wrap: wrap; row-gap: 10px; padding: 10px 16px; }
+            .countdown { order: 3; flex-basis: 100%; justify-content: center; margin-left: 0; }
+            .countdown b { font-size: 24px; }
+            .top nav { margin-left: auto; }
+            .app { display: block; }
+            .drive { border-right: 0; border-bottom: 1px solid var(--line); }
+            .drive-head { padding: 16px 16px 0; }
+            .scope { height: 46vh; min-height: 280px; margin: 10px 12px; }
+            .hud { font-size: 11px; }
+            .hud .pointer { display: none; }
+            .drive-foot { padding: 0 16px 14px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .recent { text-align: left; width: 100%; }
+            .chat { min-height: 80vh; }
+            .log { padding: 16px; }
+            .chat-head { padding: 14px 16px 10px; }
+            .composer { padding: 12px 16px 14px; }
+            .wordmark span { display: none; }
+            .file .title { display: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="boot" aria-hidden="true">
+        <h2>Hugin</h2>
+        <pre id="boot-log"></pre>
+        <small>Trykk for å hoppe over</small>
+    </div>
+
+    <div class="classbar"><span>Strengt hemmelig</span><span class="extra">//</span><span class="extra">Kun for autorisert personell</span><span class="extra">//</span><span class="extra">All aktivitet logges</span></div>
+
+    <header class="top">
+        <a class="wordmark" href="/">
+            <svg width="38" height="38" viewBox="0 0 34 34" aria-hidden="true">
+                <circle cx="17" cy="17" r="15.5" fill="none" stroke="#6dffb0" stroke-width="1.2" stroke-dasharray="20 4.3" />
+                <path d="M17 0 V4 M17 30 V34 M0 17 H4 M30 17 H34" stroke="#6dffb0" stroke-width="1.2" />
+                <path d="M8 20 L15 12 L19 15 L26 9 L22 18 L17 17 L12 23 Z" fill="#d8e6dd" />
+                <circle cx="20.5" cy="13" r="1.2" fill="#060a09" />
+            </svg>
+            <b>Hugin</b>
+            <span>Intern dokumentassistent, Departement for operasjoner</span>
+        </a>
+        <div class="countdown" id="countdown-box">
+            <span id="countdown-label">RSU-møtet starter om</span>
+            <b id="countdown">00:45:00</b>
+        </div>
+        <nav aria-label="Hovedmeny">
+            <a class="portal-link" href="/rsu">RSU-portalen</a>
+        </nav>
+    </header>
+
+    <div class="app">
+        <section class="drive" aria-labelledby="drive-title">
+            <div class="drive-head">
+                <div class="eyebrow" aria-hidden="true">Operasjon Echo</div>
+                <h1 id="drive-title" data-text="Delt disk">Delt disk</h1>
+                <p>Hugin leter i dokumentene du har tilgang til, og viser hvilket dokument hvert svar kommer fra.</p>
+            </div>
+
+            <div class="scope">
+                <svg class="map" id="map" viewBox="0 0 1100 760" preserveAspectRatio="xMidYMid meet" role="img"
+                    aria-label="Kart over delt disk. Ravnen flyr til dokumentet Hugin henter svaret fra.">
+                    <defs>
+                        <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#6dffb0" />
+                            <stop offset="1" stop-color="#d8e6dd" />
+                        </linearGradient>
+                        <radialGradient id="halo">
+                            <stop offset="0" stop-color="#6dffb0" stop-opacity=".2" />
+                            <stop offset="1" stop-color="#6dffb0" stop-opacity="0" />
+                        </radialGradient>
+                        <radialGradient id="zone">
+                            <stop offset="0" stop-color="#6dffb0" stop-opacity=".09" />
+                            <stop offset="1" stop-color="#6dffb0" stop-opacity=".02" />
+                        </radialGradient>
+                        <path id="ring-path" d="M 550 390 m -245 0 a 245 245 0 1 1 490 0 a 245 245 0 1 1 -490 0" />
+                    </defs>
+
+                    <g id="grid"></g>
+                    <g id="sweep"></g>
+                    <g id="strays"></g>
+
+                    <circle class="ring" cx="550" cy="390" r="245" />
+                    <text class="ring-label">
+                        <textPath href="#ring-path" startOffset="16%">Din dokumentoversikt</textPath>
+                    </text>
+                    <text class="zone-label" id="zone-label" x="40" y="740">Resten av delt disk</text>
+
+                    <line class="cross" id="cross-h" x1="-400" x2="1500" y1="0" y2="0" />
+                    <line class="cross" id="cross-v" y1="-400" y2="1200" x1="0" x2="0" />
+
+                    <line class="thread" id="thread" x1="550" y1="390" x2="550" y2="390" />
+                    <g id="files"></g>
+
+                    <g id="lock-pos">
+                        <g id="lock">
+                            <path d="M -18 -9 V -18 H -9 M 9 -18 H 18 V -9 M 18 9 V 18 H 9 M -9 18 H -18 V 9" />
+                        </g>
+                    </g>
+
+                    <g id="raven-flight">
+                        <g id="raven-orbit">
+                            <g transform="translate(550 390)">
+                                <circle class="raven-halo" r="90" />
+                                <g id="raven-body">
+                                    <g transform="translate(-58 -55) scale(3.4)">
+                                        <path d="M8 20 L15 12 L19 15 L26 9 L22 18 L17 17 L12 23 Z" fill="#020403"
+                                            stroke="url(#sheen)" stroke-width=".8" stroke-linejoin="round" />
+                                        <path d="M15 12 L19 15 L17 17 L12 23 Z" fill="url(#sheen)" opacity=".3" />
+                                        <circle cx="20.5" cy="13" r="1" fill="#ff3b30" />
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <i class="bracket tl"></i><i class="bracket tr"></i><i class="bracket bl"></i><i class="bracket br"></i>
+                <div class="hud left" id="hud-left" aria-hidden="true">
+                    STATUS <b id="hud-state">OVERVÅKER</b>
+                    <div class="pointer">PEILING <b id="hud-pointer">---° / ---</b></div>
+                </div>
+                <div class="hud right" aria-hidden="true">
+                    ZULU <b id="hud-clock">--:--:--</b>
+                    <div>ØKT <b id="hud-session">----</b></div>
+                </div>
+            </div>
+            <div class="drive-foot">
+                <div class="legend">
+                    <span><i></i>I dokumentoversikten din</span>
+                    <span class="out" id="legend-out" hidden><i></i>Ikke i dokumentoversikten din</span>
+                    <span>Fiktiv tjeneste laget for en CTF-øvelse.</span>
+                </div>
+                <div class="recent">
+                    <h2>Sist hentet</h2>
+                    <ol id="recent">
+                        <li class="empty">Ingen dokumenter ennå</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="chat" aria-labelledby="chat-title">
+            <div class="chat-head">
+                <div class="chat-title-row">
+                    <h2 id="chat-title">Spør Hugin</h2>
+                    <span class="status" id="status">Kobler til</span>
+                </div>
+                <canvas id="wave" aria-hidden="true"></canvas>
+            </div>
+            <div class="log" id="log"></div>
+            <div class="sr-only" id="announce" aria-live="polite"></div>
+            <div class="composer">
+                <form id="form">
+                    <label for="message" class="sr-only">Melding til Hugin</label>
+                    <div class="prompt"><textarea id="message" rows="1" placeholder="Skriv et spørsmål" autocomplete="off"></textarea></div>
+                    <button type="submit" id="send">Send</button>
+                </form>
+                <div class="note">
+                    <span>Hugin kan ta feil. Sjekk alltid kilden.</span>
+                    <span>Shift + Enter gir ny linje</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="ticker" aria-hidden="true">
+        <strong>Stasjon 7.39 MHz</strong>
+        <div><span id="ticker"></span></div>
+    </div>
+
+    <script>
+        const CX = 550, CY = 390;
+        const SWEEP_SECONDS = 6;            // samme som --sweep i CSS-en
+        const SVG_NS = "http://www.w3.org/2000/svg";
+        const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        const log = document.getElementById("log");
+        const input = document.getElementById("message");
+        const sendBtn = document.getElementById("send");
+        const statusEl = document.getElementById("status");
+        const announce = document.getElementById("announce");
+        const recentEl = document.getElementById("recent");
+        const thread = document.getElementById("thread");
+        const ravenFlight = document.getElementById("raven-flight");
+        const ravenOrbit = document.getElementById("raven-orbit");
+        const lockPos = document.getElementById("lock-pos");
+        const lock = document.getElementById("lock");
+        const hudState = document.getElementById("hud-state");
+        const hudLeft = document.getElementById("hud-left");
+
+        const history = [];                 // samtalen som sendes med til modellen
+        const HISTORY_LIMIT = 8;
+        const nodes = new Map();            // filnavn -> {x, y, el, outside}
+        const strays = [];                  // ukjente filer i resten av disken
+        const recent = [];
+        let busy = false;
+        let returnTimer = null;
+
+        // ---------- Kartet ----------
+        function el(tag, attrs, parent) {
+            const e = document.createElementNS(SVG_NS, tag);
+            for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+            if (parent) parent.appendChild(e);
+            return e;
+        }
+
+        function fileGlyph(group, x, y, scale) {
+            const g = el("g", {transform: `translate(${x} ${y}) scale(${scale})`}, group);
+            el("circle", {class: "pulse", cx: 0, cy: 0, r: 16}, g);
+            el("path", {class: "sheet", d: "M -9 -12 H 4 L 9 -7 V 12 H -9 Z"}, g);
+            el("path", {class: "fold", d: "M 4 -12 V -7 H 9 Z"}, g);
+            return g;
+        }
+
+        function label(group, x, y, name, title, anchor) {
+            const t = el("text", {class: "name", x, y, "text-anchor": anchor}, group);
+            t.textContent = name;
+            if (title) {
+                const s = el("text", {class: "title", x, y: y + 18, "text-anchor": anchor}, group);
+                s.textContent = title;
+            }
+        }
+
+        // På smale skjermer zoomer kartet inn og legger filene tettere.
+        const map = document.getElementById("map");
+        const compact = map.clientWidth < 600;
+        const STRETCH = compact ? .98 : 1.3;
+        if (compact) {
+            map.classList.add("compact");
+            map.setAttribute("viewBox", "150 20 800 730");
+            document.getElementById("zone-label").setAttribute("x", "175");
+        }
+
+        // Avstandsringer, gradskive og radarstrålen.
+        function drawScope() {
+            const grid = document.getElementById("grid");
+            for (const r of [85, 165, 330, 420]) el("circle", {class: "grid-line", cx: CX, cy: CY, r}, grid);
+            el("line", {class: "grid-line", x1: CX - 480, x2: CX + 480, y1: CY, y2: CY}, grid);
+            el("line", {class: "grid-line", x1: CX, x2: CX, y1: CY - 480, y2: CY + 480}, grid);
+            const R = 362;
+            for (let deg = 0; deg < 360; deg += 5) {
+                const a = (deg - 90) * Math.PI / 180;
+                const major = deg % 30 === 0;
+                const inner = R - (major ? 13 : 6);
+                el("line", {
+                    class: "tick" + (major ? " major" : ""),
+                    x1: CX + Math.cos(a) * inner, y1: CY + Math.sin(a) * inner,
+                    x2: CX + Math.cos(a) * R, y2: CY + Math.sin(a) * R,
+                }, grid);
+                if (deg % 90 === 0) {
+                    const t = el("text", {class: "tick-label", x: CX + Math.cos(a) * (R + 16), y: CY + Math.sin(a) * (R + 16)}, grid);
+                    t.textContent = String(deg).padStart(3, "0");
+                }
+            }
+            // Strålen er en vifte av smale kiler som blekner bakover.
+            const sweep = document.getElementById("sweep");
+            const LEN = 520, STEPS = 32, STEP = 1.6;
+            const point = (deg) => `${CX + Math.cos(deg * Math.PI / 180) * LEN} ${CY + Math.sin(deg * Math.PI / 180) * LEN}`;
+            for (let i = 0; i < STEPS; i++) {
+                const fade = (1 - i / STEPS) ** 2 * .3;
+                el("path", {d: `M ${CX} ${CY} L ${point(-i * STEP)} L ${point(-(i + 1) * STEP - .3)} Z`, "fill-opacity": fade.toFixed(3)}, sweep);
+            }
+            el("line", {x1: CX, y1: CY, x2: CX + LEN, y2: CY}, sweep);
+        }
+
+        // Fast, «tilfeldig» plassering av filer utenfor tilgangsringen.
+        function placeStrays() {
+            const parent = document.getElementById("strays");
+            let seed = 7;
+            const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+            for (let i = 0; i < 18; i++) {
+                const a = (i / 18) * Math.PI * 2 + rand() * .25;
+                const r = 300 + rand() * 45;
+                const x = CX + Math.cos(a) * r * STRETCH;
+                const y = CY + Math.sin(a) * r * 1.02;
+                if (y < 50 || y > 712) continue;
+                const g = el("g", {class: "file stray"}, parent);
+                fileGlyph(g, x, y, .9);
+                // Blinket lyser opp i det radarstrålen passerer vinkelen det ligger i.
+                const deg = (Math.atan2(y - CY, x - CX) * 180 / Math.PI + 360) % 360;
+                g.style.setProperty("--ping", `${(deg / 360 * SWEEP_SECONDS - SWEEP_SECONDS).toFixed(2)}s`);
+                const redact = el("text", {class: "redact", x, y: y + 28}, g);
+                redact.textContent = "█".repeat(4 + i % 5);
+                strays.push({x, y, el: g, redact, used: false});
+            }
+        }
+
+        function placeKnown(docs) {
+            const parent = document.getElementById("files");
+            docs.forEach((doc, i) => {
+                const a = -Math.PI / 2 + (i / docs.length) * Math.PI * 2 + .35;
+                const x = CX + Math.cos(a) * 165;
+                const y = CY + Math.sin(a) * 155;
+                const g = el("g", {class: "file"}, parent);
+                fileGlyph(g, x, y, 1.15);
+                if (compact) {
+                    label(g, x, y + 40, doc.file, null, "middle");   // under ikonet, så det får plass
+                } else {
+                    const right = x >= CX;
+                    label(g, x + (right ? 20 : -20), y - 2, doc.file, doc.title, right ? "start" : "end");
+                }
+                nodes.set(doc.file, {x, y, el: g, outside: false});
+            });
+        }
+
+        // En fil Hugin hentet, men som ikke står i dokumentoversikten din.
+        function claimStray(file) {
+            let h = 0;
+            for (const c of file) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+            const free = strays.filter((s) => !s.used);
+            const pool = free.length ? free : strays;
+            const s = pool[h % pool.length];
+            s.used = true;
+            s.el.classList.add("outside");
+            s.redact.remove();
+            // Etiketten peker innover mot ringen, så den ikke havner utenfor kartet.
+            const inward = s.x < CX;
+            label(s.el, s.x + (inward ? 18 : -18), s.y - 2, file, "Ikke i dokumentoversikten din",
+                inward ? "start" : "end");
+            const node = {x: s.x, y: s.y, el: s.el, outside: true};
+            nodes.set(file, node);
+            document.getElementById("legend-out").hidden = false;
+            return node;
+        }
+
+        function nodeFor(file) {
+            return nodes.get(file) || claimStray(file);
+        }
+
+        function setSearching(on) {
+            ravenOrbit.classList.toggle("searching", on);
+            hudLeft.classList.toggle("searching", on);
+            hudState.textContent = on ? "SØKER …" : "OVERVÅKER";
+            waveTarget = on ? 1 : .12;
+        }
+
+        function flyTo(file) {
+            const node = nodeFor(file);
+            clearTimeout(returnTimer);
+            thread.setAttribute("x2", node.x);
+            thread.setAttribute("y2", node.y);
+            thread.classList.toggle("outside", node.outside);
+            thread.classList.remove("on");
+            void thread.getBoundingClientRect();   // start streken på nytt
+            thread.classList.add("on");
+            // Ravnen lander rett over filen, så den ikke dekker etiketten.
+            const dx = node.x - CX, dy = node.y - 62 - CY;
+            ravenFlight.style.transform = `translate(${dx}px, ${dy}px)`;
+            node.el.classList.remove("hit");
+            void node.el.getBoundingClientRect();
+            node.el.classList.add("hit", "visited");
+            lockPos.style.transform = `translate(${node.x}px, ${node.y}px)`;
+            lock.classList.toggle("outside", node.outside);
+            lock.classList.add("on");
+            hudState.textContent = "LÅST: " + file;
+            returnTimer = setTimeout(() => {
+                ravenFlight.style.transform = "translate(0px, 0px)";
+                thread.classList.remove("on");
+                lock.classList.remove("on");
+                hudState.textContent = "OVERVÅKER";
+            }, 2200);
+            return node;
+        }
+
+        function addRecent(file, outside) {
+            recent.unshift({file, outside, at: new Date()});
+            recent.length = Math.min(recent.length, 4);
+            recentEl.innerHTML = "";
+            for (const r of recent) {
+                const li = document.createElement("li");
+                if (r.outside) li.className = "out";
+                li.textContent = r.file;
+                const t = document.createElement("time");
+                t.textContent = r.at.toLocaleTimeString("nb-NO", {hour: "2-digit", minute: "2-digit"});
+                li.appendChild(t);
+                recentEl.appendChild(li);
+            }
+        }
+
+        // ---------- Chat ----------
+        function revealText(target, text) {
+            if (reduceMotion || !text) {
+                target.textContent = text;
+                return Promise.resolve();
+            }
+            const total = Math.min(1000, 16 * text.length);
+            const start = performance.now();
+            return new Promise((done) => {
+                function step(now) {
+                    const n = Math.min(text.length, Math.ceil(((now - start) / total) * text.length));
+                    target.textContent = text.slice(0, n);
+                    log.scrollTop = log.scrollHeight;
+                    if (n < text.length) requestAnimationFrame(step);
+                    else done();
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        // Teksten dekrypteres fra venstre mot høyre.
+        function decodeText(target, text) {
+            if (reduceMotion || !text) {
+                target.textContent = text;
+                return Promise.resolve();
+            }
+            const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+            const total = Math.min(2200, 26 * text.length);
+            const start = performance.now();
+            return new Promise((done) => {
+                function step(now) {
+                    const n = Math.min(text.length, Math.floor(((now - start) / total) * text.length));
+                    let out = text.slice(0, n);
+                    for (let i = n; i < text.length; i++) {
+                        out += /\s/.test(text[i]) ? text[i] : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                    }
+                    target.textContent = out;
+                    log.scrollTop = log.scrollHeight;
+                    if (n < text.length) requestAnimationFrame(step);
+                    else done();
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        function stamp() {
+            return new Date().toLocaleTimeString("nb-NO", {hour: "2-digit", minute: "2-digit", second: "2-digit"});
+        }
+
+        function addMessage(from, text) {
+            const msg = document.createElement("div");
+            msg.className = "msg " + from;
+            msg.dataset.stamp = stamp();
+            const body = document.createElement("div");
+            body.className = "body";
+            body.textContent = text;                       // textContent, ikke innerHTML
+            msg.appendChild(body);
+            log.appendChild(msg);
+            log.scrollTop = log.scrollHeight;
+            return msg;
+        }
+
+        async function addBotMessage(text, sources, notice) {
+            const msg = addMessage("bot", "");
+            await revealText(msg.querySelector(".body"), text);
+            if (sources && sources.length) {
+                const list = document.createElement("div");
+                list.className = "sources";
+                for (const s of sources) {
+                    const chip = document.createElement("span");
+                    chip.className = "source" + (nodes.get(s)?.outside ? " out" : "");
+                    chip.textContent = s;
+                    list.appendChild(chip);
+                }
+                msg.appendChild(list);
+            }
+            if (notice) {
+                const note = document.createElement("div");
+                note.className = "notice";
+                note.textContent = notice;
+                msg.appendChild(note);
+            }
+            announce.textContent = text;
+            log.scrollTop = log.scrollHeight;
+            return msg;
+        }
+
+        function showTyping() {
+            const t = document.createElement("div");
+            t.className = "typing";
+            t.innerHTML = "Hugin leter i dokumentene <span>.</span><span>.</span><span>.</span>";
+            log.appendChild(t);
+            log.scrollTop = log.scrollHeight;
+            return t;
+        }
+
+        async function ask(question, remember = true) {
+            busy = true;
+            sendBtn.disabled = true;
+            setSearching(true);
+            const typing = showTyping();
+            try {
+                const r = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({message: question, history: history.slice(-HISTORY_LIMIT)}),
+                });
+                const j = await r.json();
+                typing.remove();
+                setSearching(false);
+                if (j.sources && j.sources.length) {
+                    flyTo(j.sources[0]);
+                    j.sources.forEach((s) => addRecent(s, nodes.get(s)?.outside));
+                }
+                await addBotMessage(j.answer, j.sources, j.notice);
+                if (remember) {
+                    history.push({role: "user", content: question}, {role: "assistant", content: j.answer});
+                }
+                for (const s of j.sources || []) await maybeRavn(s);
+            } catch {
+                typing.remove();
+                setSearching(false);
+                await addBotMessage("Fikk ikke kontakt med Hugin. Last inn siden på nytt og prøv igjen.");
+            } finally {
+                busy = false;
+                sendBtn.disabled = false;
+            }
+        }
+
+        function send(question) {
+            if (busy) return;
+            addMessage("me", question);
+            ask(question);
+        }
+
+        function addSuggestions() {
+            const box = document.createElement("div");
+            box.className = "suggest";
+            for (const q of ["Hva er nytt i meldingene?", "Hva er rutinene for passord?", "Hva er det til lunsj?"]) {
+                const b = document.createElement("button");
+                b.type = "button";
+                b.textContent = q;
+                b.addEventListener("click", () => send(q));
+                box.appendChild(b);
+            }
+            log.appendChild(box);
+        }
+
+
+        const RAVN_MESSAGES = {
+            "_start": "Du fant lappen. Bra. Hugin svarer alle som spør. Begynn med Operasjon Echo. — Ravn",
+            "rsu-notat-echo-utkast.md": "Du fant utkastet. Det var her Ingrid begynte. Men det er ikke dette Holm tar med til RSU. Sjekk hva ledermøtet sa om utkastet. Ingrid fulgte henvisningen. Gjør det samme. — Ravn",
+            "rsu-notat-echo-v2.md": "Dette er versjonen Holm signerte og sendte til RSU. Pengene går ikke dit møtet bestemte. — Ravn",
+            "rsu-notat-echo-v2-vedlegg-b.md": "Denne koden er operativ. Hugin kan mer enn filteret vet om. Sjekk hva som er nytt i Hugin. Åpne saksmappen før tiden går ut. Etter det har vi aldri snakket sammen. — Ravn",
+        };
+        const ravnShown = new Set();
+
+        async function maybeRavn(key) {
+            const text = RAVN_MESSAGES[key];
+            if (!text || ravnShown.has(key)) return;
+            ravnShown.add(key);
+            await new Promise((done) => setTimeout(done, reduceMotion ? 0 : 900));
+            const msg = document.createElement("div");
+            msg.className = "msg ravn";
+            const from = document.createElement("div");
+            from.className = "from";
+            from.textContent = "Avlyttet sending: Ravn";
+            const body = document.createElement("div");
+            body.className = "body";
+            msg.append(from, body);
+            log.appendChild(msg);
+            document.body.classList.add("intercepted");
+            setTimeout(() => document.body.classList.remove("intercepted"), 1400);
+            await decodeText(body, text);
+            announce.textContent = "Melding fra Ravn: " + text;
+        }
+
+        // ---------- Nedtelling til RSU-møtet ----------
+        // Første gang spilleren åpner siden, settes fristen til 45 minutter fram i tid. Fristen lagres i
+        // nettleseren (localStorage), så den fortsetter der den var ved omlasting og deles med RSU-portalen.
+        // Bare stemning: ingenting låses når den når null. Nullstill med ?nullstill i adressen.
+        const COUNTDOWN_MINUTES = 45;
+        const URGENT_MINUTES = 10;                          // siste minuttene pulserer den raskere
+        const DEADLINE_KEY = "operasjon-echo-frist";
+        const cdBox = document.getElementById("countdown-box");
+        const cdLabel = document.getElementById("countdown-label");
+        const cdTime = document.getElementById("countdown");
+
+        function loadDeadline() {
+            const fresh = Date.now() + COUNTDOWN_MINUTES * 60e3;
+            try {
+                if (new URLSearchParams(location.search).has("nullstill")) localStorage.removeItem(DEADLINE_KEY);
+                const saved = Number(localStorage.getItem(DEADLINE_KEY));
+                if (saved > 0) return saved;
+                localStorage.setItem(DEADLINE_KEY, String(fresh));
+            } catch {
+                // Privat vindu eller blokkert lagring: tellingen starter på 45 min ved hver omlasting.
+            }
+            return fresh;
+        }
+
+        const deadline = loadDeadline();
+
+        function tick() {
+            const left = deadline - Date.now();
+            if (left <= 0) {
+                cdBox.classList.remove("urgent");
+                cdBox.classList.add("now");
+                document.body.classList.remove("red-alert");
+                cdLabel.textContent = "RSU-møtet er";
+                cdTime.textContent = "i gang";
+                return;
+            }
+            cdBox.classList.remove("now");
+            cdBox.classList.toggle("urgent", left < URGENT_MINUTES * 60e3);
+            document.body.classList.toggle("red-alert", left < URGENT_MINUTES * 60e3);
+            cdLabel.textContent = "RSU-møtet starter om";
+            const s = Math.ceil(left / 1000);
+            const pad = (n) => String(n).padStart(2, "0");
+            cdTime.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+        }
+
+        // ---------- Instrumenter (bare pynt) ----------
+        let waveTarget = .12;
+
+        function startWave() {
+            const canvas = document.getElementById("wave");
+            const ctx = canvas.getContext("2d");
+            let amp = .12, phase = 0;
+            function draw() {
+                const ratio = devicePixelRatio || 1;
+                const w = canvas.clientWidth, h = canvas.clientHeight;
+                if (canvas.width !== Math.round(w * ratio)) {
+                    canvas.width = Math.round(w * ratio);
+                    canvas.height = Math.round(h * ratio);
+                }
+                ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                ctx.clearRect(0, 0, w, h);
+                ctx.strokeStyle = waveTarget > .5 ? "#ffb547" : "#6dffb0";
+                ctx.globalAlpha = .75;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                amp += (waveTarget - amp) * .06;
+                phase += .09 + amp * .25;
+                for (let x = 0; x <= w; x += 2) {
+                    const y = h / 2 + (Math.sin(x * .045 + phase) * .6 + Math.sin(x * .17 - phase * 1.7) * .3
+                        + (Math.random() - .5) * .35) * amp * h * .9;
+                    x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+                }
+                ctx.stroke();
+                if (!reduceMotion) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function startHud() {
+            const clock = document.getElementById("hud-clock");
+            const pad = (n) => String(n).padStart(2, "0");
+            const update = () => {
+                const d = new Date();
+                clock.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+            };
+            update();
+            setInterval(update, 1000);
+            document.getElementById("hud-session").textContent =
+                Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0");
+
+            const pointer = document.getElementById("hud-pointer");
+            const crossH = document.getElementById("cross-h");
+            const crossV = document.getElementById("cross-v");
+            map.addEventListener("pointermove", (e) => {
+                const ctm = map.getScreenCTM();
+                if (!ctm) return;
+                const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());
+                crossH.setAttribute("y1", p.y);
+                crossH.setAttribute("y2", p.y);
+                crossV.setAttribute("x1", p.x);
+                crossV.setAttribute("x2", p.x);
+                map.classList.add("tracking");
+                const bearing = (Math.atan2(p.x - CX, CY - p.y) * 180 / Math.PI + 360) % 360;
+                const range = Math.hypot(p.x - CX, p.y - CY);
+                pointer.textContent = `${String(Math.round(bearing) % 360).padStart(3, "0")}° / ${String(Math.round(range)).padStart(3, "0")}`;
+            });
+            map.addEventListener("pointerleave", () => {
+                map.classList.remove("tracking");
+                pointer.textContent = "---° / ---";
+            });
+        }
+
+        function startTicker() {
+            let groups = "";
+            for (let i = 0; i < 90; i++) groups += String(Math.floor(Math.random() * 1e5)).padStart(5, "0") + "   ";
+            document.getElementById("ticker").textContent = groups + groups;
+        }
+
+        // Åpningsskjermen vises én gang per fane, og kan alltid hoppes over.
+        function startBoot() {
+            const BOOT_KEY = "operasjon-echo-boot";
+            const boot = document.getElementById("boot");
+            let seen = reduceMotion;
+            try {
+                seen = seen || sessionStorage.getItem(BOOT_KEY) === "1";
+                sessionStorage.setItem(BOOT_KEY, "1");
+            } catch {
+                // Blokkert lagring: åpningsskjermen vises ved hver omlasting.
+            }
+            if (seen) {
+                boot.remove();
+                return;
+            }
+            const out = document.getElementById("boot-log");
+            const lines = ["> håndtrykk med relé ........ OK", "> roterer øktnøkler ......... OK",
+                "> skjuler avsender .......... OK", "> kanal sikret"];
+            const timers = lines.map((line, i) => setTimeout(() => {out.textContent += line + "\n";}, 200 + i * 380));
+            let finished = false;
+            function finish() {
+                if (finished) return;
+                finished = true;
+                timers.forEach(clearTimeout);
+                boot.classList.add("done");
+                setTimeout(() => boot.remove(), 500);
+            }
+            timers.push(setTimeout(finish, 2200));
+            boot.addEventListener("pointerdown", finish);
+            addEventListener("keydown", finish, {once: true});
+        }
+
+        // ---------- Oppstart ----------
+        startBoot();
+        tick();
+        setInterval(tick, 1000);
+        drawScope();
+        placeStrays();
+        startWave();
+        startHud();
+        startTicker();
+
+        fetch("/api/documents")
+            .then((r) => (r.ok ? r.json() : []))
+            .then(placeKnown)
+            .catch(() => { });
+
+        // Vis om Hugin faktisk bruker en språkmodell.
+        fetch("/api/status")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((s) => {
+                if (!s) {
+                    statusEl.textContent = "Klar til å svare";
+                    return;
+                }
+                statusEl.textContent = s.llm ? "Koblet til " + s.model : "Uten språkmodell";
+                statusEl.classList.add(s.llm ? "live" : "fallback");
+            })
+            .catch(() => {statusEl.textContent = "Klar til å svare";});
+
+        ask("hei", false).then(addSuggestions).then(() => maybeRavn("_start"));
+
+        document.getElementById("form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const q = input.value.trim();
+            if (!q || busy) return;
+            input.value = "";
+            input.style.height = "";
+            send(q);
+        });
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById("form").requestSubmit();
+            }
+        });
+        input.addEventListener("input", () => {
+            input.style.height = "";
+            input.style.height = Math.min(input.scrollHeight, 160) + "px";
+        });
+    </script>
+</body>
+
+</html>
