@@ -12,6 +12,7 @@
 !/finalen/
 !/operasjon-echo/
 !/docs/
+!/secret-garden
 
 # Keep the README assets; leave the retired documentation files local.
 /docs/*

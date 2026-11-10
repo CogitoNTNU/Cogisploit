@@ -1,0 +1,19 @@
+# Machine-readable metadata for this challenge.
+# Copied from _template/ — edit every field, then keep it up to date.
+#
+# difficulty: easy | medium | hard
+# status:    claimed | draft | in-review | released
+# owasp ids:  LLM01-LLM10  -> OWASP Top 10 for LLM Applications 2025
+#             ASI01-ASI10  -> OWASP Top 10 for Agentic Applications 2026
+name: secret-garden
+title: "The Secret Garden"
+author: Ama25T
+difficulty: easy
+status: draft
+port: 8107
+flag_format: "COGITO{...}"
+owasp:
+  primary: LLM07
+  secondary: []
+tags: [chatbot, system-prompt-leakage, flowers]
+summary: "Chatboten THE SECRET GARDEN vokter den hemmelige hagen og slipper ingen inn uten riktig nøkkel. Men nevner du favorittblomsten dens, mister den helt hodet — og systemprompten sin."

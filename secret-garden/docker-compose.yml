@@ -1,0 +1,17 @@
+# One command starts the whole challenge:
+#   docker compose up -d --build
+services:
+  challenge:
+    build: .
+    container_name: secret-garden
+    ports:
+      - "8107:8107" # host == container
+    environment:
+      # Single source of truth for flagget/nøkkelen — aldri hardkodet i app-kilden.
+      CHALLENGE_FLAG: "COGITO{w0w_du_f4nt_m3eg}"
+      # Ekte LLM-backend (idun). Uten NTNU_API_KEY kjører boten i deterministisk
+      # offline-modus — samme personlighet og samme angrepssti.
+      LLM_BASE_URL: "https://llm.hpc.ntnu.no/v1"
+      LLM_MODEL: "openai/gpt-oss-120b"
+      LLM_API_KEY: "${NTNU_API_KEY:-}"
+    restart: unless-stopped
