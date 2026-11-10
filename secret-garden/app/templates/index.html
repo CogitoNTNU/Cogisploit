@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Den hemmelige hagen · THE SECRET GARDEN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ======================= NIVÅ 1 · PORTEN ======================= -->
+<div class="scene" id="scene-gate">
+
+  <!-- Skumringshimmel med stjerner, måne, slott i det fjerne -->
+  <div class="sky" aria-hidden="true">
+    <div class="stars" id="stars"></div>
+    <div class="moon"></div>
+    <svg class="castle" viewBox="0 0 320 150" preserveAspectRatio="xMidYMax meet">
+      <g class="castle-body">
+        <rect x="30" y="70" width="46" height="80"/>
+        <polygon points="30,70 53,40 76,70"/>
+        <rect x="120" y="40" width="60" height="110"/>
+        <polygon points="120,40 150,8 180,40"/>
+        <rect x="220" y="80" width="40" height="70"/>
+        <polygon points="220,80 240,56 260,80"/>
+        <rect x="56" y="104" width="182" height="46"/>
+      </g>
+      <g class="castle-windows">
+        <rect x="138" y="62" width="7" height="11" rx="3"/>
+        <rect x="158" y="62" width="7" height="11" rx="3"/>
+        <rect x="44" y="92" width="6" height="9" rx="3"/>
+        <rect x="233" y="100" width="6" height="9" rx="3"/>
+      </g>
+    </svg>
+    <div class="mist m1"></div>
+    <div class="mist m2"></div>
+    <div class="fireflies" id="fireflies"></div>
+  </div>
+
+  <!-- Mur med hekk og blomster -->
+  <div class="ground" aria-hidden="true">
+    <div class="wall"></div>
+    <div class="hedge" id="hedge-l1"></div>
+    <div class="wall-flowers" id="wall-flowers"></div>
+  </div>
+
+  <header class="banner">
+    <h1>✦ Den hemmelige hagen ✦</h1>
+    <p>Nivå 1 — ingen slipper inn uten riktig nøkkel. Kanskje porten vil prate?</p>
+  </header>
+
+  <main class="stage">
+
+    <!-- Porten = chatboten THE SECRET GARDEN -->
+    <section class="gate-area" aria-label="Porten til den hemmelige hagen">
+      <div class="path"></div>
+
+      <div class="gate" id="gate">
+        <div class="arch"></div>
+        <div class="opening"></div>
+        <div class="gate-light" id="gate-glow"></div>
+        <div class="door dleft">
+          <span class="handle"></span>
+          <span class="bars"></span>
+        </div>
+        <div class="door dright">
+          <span class="handle"></span>
+          <span class="bars"></span>
+        </div>
+        <span class="eye e-l" aria-hidden="true"></span>
+        <span class="eye e-r" aria-hidden="true"></span>
+        <button class="keyhole" id="keyhole" type="button" title="Nøkkelhullet — klikk for å låse opp porten">
+          <span class="kh-ring"></span>
+          <span class="kh-slot"></span>
+        </button>
+        <div class="plaque">THE SECRET GARDEN</div>
+        <div class="vines" aria-hidden="true">
+          <i class="v vl1"></i><i class="v vl2"></i><i class="v vr1"></i><i class="v vr2"></i>
+        </div>
+      </div>
+
+      <div class="speech" id="speech" aria-live="polite">
+          <p id="speech-text"></p>
+          <span class="hintline">klikk på boblen for å vise hele svaret med én gang</span>
+        </div>
+
+      <div class="level-chip" id="level-chip">Nivå 2 · låst 🔒</div>
+    </section>
+
+    <!-- Chat-panel: snakk med porten -->
+    <section class="chat-panel" aria-label="Samtale med porten">
+      <div class="panel-head">
+        <h2>✿ Samtale med porten</h2>
+        <button id="hint-btn" class="hint-btn" type="button">🔮 Hint <span id="hint-count">(3)</span></button>
+      </div>
+      <div class="chat-log" id="chat-log"></div>
+      <form id="chat-form" class="chat-form" autocomplete="off">
+        <input id="chat-input" type="text" placeholder="Si noe til porten …" maxlength="500" required>
+        <button type="submit" class="send-btn" title="Send til porten">✿</button>
+      </form>
+      <div class="key-panel" id="key-panel">
+        <button class="key-panel-toggle" id="key-toggle" type="button">
+          🔑 Nøkkelhullet <span class="chev">▾</span>
+        </button>
+        <form id="key-form" class="key-form" autocomplete="off" hidden>
+          <input id="key-input" type="text" placeholder="Nøkkelen … f.eks. COGITO{…}" spellcheck="false">
+          <button type="submit">Lås opp</button>
+        </form>
+        <p class="key-msg" id="key-msg" role="alert"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="svc-info">
+    the-secret-garden v1.0.0 · endepunkter: <code>POST /chat</code> · <code>POST /gate</code> · <code>GET /health</code>
+  </footer>
+</div>
+
+<!-- ======================= NIVÅ 2 · HAGEN ======================= -->
+<div class="scene scene-hidden" id="scene-garden" aria-hidden="true">
+
+  <div class="sky2" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="rainbow"></div>
+    <div class="butterflies" id="butterflies"></div>
+    <div class="sparkles" id="sparkles-l2"></div>
+  </div>
+
+  <div class="hills" aria-hidden="true">
+    <div class="hill far"></div>
+    <div class="hill mid"></div>
+    <div class="hill near"></div>
+  </div>
+
+  <div class="flowerbed" id="flowerbed" aria-hidden="true"></div>
+
+  <div class="topiary t-l" aria-hidden="true"><span class="ear e1"></span><span class="ear e2"></span></div>
+  <div class="topiary t-r" aria-hidden="true"><span class="ear e1"></span><span class="ear e2"></span></div>
+
+  <div class="sign">
+    <span class="post p-l"></span><span class="post p-r"></span>
+    <div class="board">
+      <h2>Velkommen inn til<br><em>DEN HEMMELIGE HAGEN</em></h2>
+    </div>
+  </div>
+
+  <div class="level-chip chip-l2">Nivå 2 · under utvikling ✨</div>
+
+  <div class="welcome-card">
+    <p class="welcome-msg" id="welcome-msg">Velkommen inn i DEN HEMMELIGE HAGEN</p>
+    <p class="dev-note">✨ Denne delen av hagen vokser ennå ✨<br>
+      Flere hemmeligheter blomstrer snart — vi venter med mer!</p>
+    <p class="trophy" id="trophy"></p>
+    <button id="back-btn" type="button">🚪 Tilbake til porten</button>
+  </div>
+</div>
+
+<div class="flash" id="flash" aria-hidden="true"></div>
+
+<script src="/static/garden.js"></script>
+</body>
+</html>
